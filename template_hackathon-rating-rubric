@@ -1,0 +1,43 @@
+# {{event.name}} - Judging Rubric
+
+## Overview
+
+This rubric provides a structured framework for evaluating hackathon submissions. Each project will be scored across multiple categories on a scale of 1-5, with specific criteria for each score level.
+
+## Scoring Categories
+
+{% for criterion in judging_criteria %}
+
+### {{criterion.weight}}%. {{criterion.name}}
+
+_{{criterion.description}}_
+
+| Score | Criteria                   |
+| ----- | -------------------------- |
+| 5     | Exceptional implementation |
+| 4     | Very good implementation   |
+| 3     | Good implementation        |
+| 2     | Basic implementation       |
+| 1     | Poor implementation        |
+
+{% endfor %}
+
+## Scoring Sheet
+
+| Team Name | {% for criterion in judging_criteria %}{{criterion.name}} ({{criterion.weight}}%) | {% endfor %}Total Score | Notes |
+| --------- | {% for criterion in judging_criteria %}------------------- | {% endfor %}------------ | ----- |
+| | {% for criterion in judging_criteria %} | {% endfor %} | |
+
+## Final Score Calculation
+
+- Each category score (1-5) is multiplied by its percentage weight
+- The weighted scores are summed to calculate the final score (maximum 5 points)
+- One bonus point may be added for teams that effectively use additional Agora technologies
+
+## Feedback Section
+
+For each submission, judges should provide:
+
+1. **Strengths**: Key positive aspects of the project
+2. **Areas for Improvement**: Constructive feedback on how the project could be enhanced
+3. **Additional Comments**: Any other relevant observations or suggestions

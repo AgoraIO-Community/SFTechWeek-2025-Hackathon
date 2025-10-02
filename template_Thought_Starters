@@ -1,0 +1,13 @@
+# Thought Starters
+
+As part of the **{{event.name}}**, we've put together some thought starters to help you brainstorm and develop your project ideas. Each concept presents a unique challenge and an opportunity to push the boundaries of conversational AI technology.
+
+---
+
+{% for starter in thought_starters %}
+
+## {{starter.title}}
+
+{{starter.description}}
+
+{% endfor %}

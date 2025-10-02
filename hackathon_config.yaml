@@ -1,0 +1,73 @@
+event:
+  name: 'Agora Hackathon'
+  date: 'June 2025'
+  description: 'Welcome to the Agora Hackathon! This repo serves as the central hub for hackathon submissions.'
+
+theme:
+  type: 'specific' # or 'open'
+  title: 'AI-Powered Real-Time Communication'
+  description: "Build innovative solutions using Agora's Conversational AI Engine to showcase Agora powered Voice-to-Voice AI."
+  focus_areas:
+    - 'Real-time video/audio communication'
+    - 'AI-powered content moderation'
+    - 'Voice and video analytics'
+    - 'Interactive live streaming'
+  technologies:
+    - 'Agora Conversational AI Engine'
+    - 'Agora RTC SDK'
+    - 'Agora Cloud Recording'
+    - 'Agora Content Moderation'
+    - 'OpenAI API'
+    - 'Hugging Face Models'
+
+contact:
+  name: 'Hermes'
+  email: 'hermes@agora.io'
+  communication:
+    platform: 'Discord' # or 'Slack', 'Discord', 'Teams', etc.
+    channel: 'hackathon-support'
+    link: 'https://discord.gg/agora-hackathon' # Optional link to join
+  additional_info: 'For urgent matters, please reach out directly via email.'
+
+submission_guidelines:
+  fork_instructions: 'Click the Fork button on the top right to create a copy of this repository under your GitHub account.'
+  clone_instructions: 'After forking, clone the repository to your local machine.'
+  team_folder_structure: |
+    submissions/
+     ├── team-name/
+     │   ├── README.md  # (Required: Describe your project)
+     │   ├── demo.mp4  # (Required: A demo video)
+     │   ├── src/  # (Your source code)
+     │   └── docs/  # (Any documentation or images)
+
+judging_criteria:
+  - name: 'Innovation'
+    weight: 15
+    description: 'Uniqueness of the idea'
+  - name: 'Functionality'
+    weight: 20
+    description: 'How well it works'
+  - name: 'Impact'
+    weight: 5
+    description: 'Real-world use case potential'
+  - name: 'Technical Execution'
+    weight: 20
+    description: 'Code quality and implementation'
+  - name: 'Documentation and Ease of Testing'
+    weight: 20
+    description: 'Quality of documentation and how easily judges can test the project'
+  - name: 'User Experience'
+    weight: 20
+    description: 'Quality of interaction and overall user experience'
+
+thought_starters:
+  - title: 'AI-Powered Customer Service'
+    description: 'Create an intelligent customer service solution that can handle complex queries and provide personalized responses.'
+  - title: 'Virtual Event Platform'
+    description: 'Develop a platform that makes virtual events more engaging and interactive using AI.'
+  - title: 'Smart Home Assistant'
+    description: 'Build an AI-powered home assistant that can understand context and provide natural interactions.'
+  - title: 'Educational AI Tutor'
+    description: 'Create an AI tutor that can adapt to different learning styles and provide personalized education.'
+  - title: 'Healthcare Communication Platform'
+    description: 'Develop a platform that helps healthcare providers communicate more effectively with patients using AI.'

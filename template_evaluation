@@ -1,0 +1,68 @@
+# {{event.name}} - Evaluation
+
+## Project Overview
+
+[Provide a brief description of the project being evaluated, including its main features and objectives]
+
+## Scoring Sheet
+
+| Name | {% for criteria in judging_criteria %}{{criteria.name}} ({{criteria.weight}}%) | {% endfor %}Bonus Point | Total Score | Notes |
+|------|{% for criteria in judging_criteria %}---|{% endfor %}---|---|---|
+| [Project Name] | {% for criteria in judging_criteria %} PTS \* (.{{criteria.weight_decimal}}) | {% endfor %}+Bonus_PTS | \_\_ | [Brief overall assessment] |
+
+## Scoring Details
+
+{% for criteria in judging_criteria %}### {{loop.index}}. {{criteria.name}}
+
+**Score: \_\_**
+
+{{criteria.description}}
+
+**Evaluation Notes:**
+[Provide detailed feedback on this criterion]
+
+**Strengths:**
+
+- **Areas for Improvement:**
+
+-
+
+{% endfor %}
+
+## Bonus Point
+
+**Score: +\_\_**
+
+[Evaluate any bonus criteria such as use of additional Agora products, exceptional innovation, etc.]
+
+**Notes:**
+
+## Total Score
+
+**Final Score: \_\_/5**
+
+## Overall Feedback
+
+[Provide comprehensive feedback on the submission]
+
+### Strengths
+
+-
+-
+-
+
+### Areas for Improvement
+
+-
+-
+-
+
+### Recommendations
+
+-
+-
+-
+
+### Judge Comments
+
+[Additional comments from the judge]

@@ -1,0 +1,13 @@
+{
+  "name": "hackathon-template-customizer",
+  "version": "0.1.0",
+  "description": "A script to customize the Agora hackathon template",
+  "author": "digitallysavvy",
+  "main": "update-templates.js",
+  "scripts": {
+    "setup": "node update-templates.js"
+  },
+  "dependencies": {
+    "yaml": "^2.3.4"
+  }
+}

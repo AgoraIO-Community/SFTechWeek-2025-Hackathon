@@ -1,0 +1,98 @@
+# {{event.name}} [{{event.date}}]
+
+{{event.description}}
+
+{% if theme.type == 'specific' %}
+
+## 🎯 **Theme: {{theme.title}}**
+
+{{theme.description}}
+
+### Focus Areas
+{% for area in theme.focus_areas %}
+- {{area}}
+
+  {% endfor %}
+### Recommended Technologies
+{% for tech in theme.technologies %}
+- {{tech}}
+
+  {% endfor %}
+  {% else %}
+## 🎯 **Theme**
+
+This hackathon is open-ended! We encourage you to explore any area that interests you, as long as it incorporates Agora's real-time communication technologies in an innovative way.
+{% endif %}
+
+Follow the steps below to **fork, develop, and submit** your project.
+
+---
+
+## 📌 **Submission Guidelines**
+
+### **1. Fork this Repository**
+
+{{submission_guidelines.fork_instructions}}
+
+### **2. Clone Your Forked Repository**
+
+{{submission_guidelines.clone_instructions}}
+
+```bash
+git clone https://github.com/YOUR-GITHUB-USERNAME/{{repo_name}}.git
+cd {{repo_name}}
+```
+
+### **3. Create Your Team Folder**
+
+Inside the `submissions/` directory, create a new folder using your team name.  
+Example:
+
+{{submission_guidelines.team_folder_structure}}
+
+### **4. Work on Your Project**
+
+- Develop your project inside your team folder.
+- Include a `README.md` file explaining your project, its setup, and usage. Include any special instructions to run it.
+- Include a short demo video or screenshots in the `docs/` folder.
+
+### **5. Commit and Push Changes**
+
+```bash
+git add .
+git commit -m "Submission commit - Team [Your Team Name]"
+git push
+```
+
+### **6. Submit via Pull Request**
+
+1. Go to your forked repo on GitHub.
+2. Click the **"New Pull Request"** button.
+3. Set the base repository to `AgoraIO-Community/{{repo_name}}` and compare it with your forked branch.
+4. In the PR description, include:
+   - Team Name
+   - Project Name
+   - A brief summary of the project
+   - Any special instructions of features to focus on or to avoid because they may not be finished. (If applicable)
+5. Click **"Create Pull Request"** to submit your project.
+
+---
+
+## 🏆 **Judging Criteria**
+
+Projects will be evaluated based on:  
+{% for criterion in judging_criteria %}
+✅ **{{criterion.name}}** – {{criterion.description}}  
+{% endfor %}
+
+---
+
+## ❓ **Need Help?**
+
+For any questions, reach out to [**{{contact.name}}**](mailto:{{contact.email}}) or join our {{contact.communication.platform}} channel{% if contact.communication.link %} at [{{contact.communication.channel}}]({{contact.communication.link}}){% else %}: {{contact.communication.channel}}{% endif %}.
+
+{% if contact.additional_info %}
+{{contact.additional_info}}
+{% endif %}
+
+**Happy hacking and good luck!** 🚀
