@@ -4,7 +4,7 @@ Welcome to the Agora Hackathon! This hackathon challenges you to build voice-fir
 agents that do more than just speak. You’ll use Agora’s Conversational AI Engine as
 the backbone of your agents, integrate ElevenLabs for realistic and expressive
 speech, bring your agent to life with HeyGen’s lifelike video avatars, and deploy
-your frontend with Appwrite’s all-in-one open-source development platform.
+your frontend with Appwrite’s all-in-one development platform.
 
 The Agora Hackathon kicks off on Monday, October 6 at 6 PM Pacific Time and runs until Thursday, October 9 at 3 PM Pacific Time. No submissions will be accepted after 3 PM on Thursday.
 
@@ -15,15 +15,15 @@ This repository serves as the central hub for hackathon submissions and resource
 In this specific-theme hackathon, you must build a real-time, multimodal agent that
 goes beyond simple call-and-response. Your agent should:
 
-• Use Agora’s Conversational AI Engine to handle live, real-time voice
-communication.
-• Generate speech through ElevenLabs’ text-to-speech API, which offers emotional
-depth and rich delivery for lifelike voices.
-• Present an engaging visual presence through HeyGen’s Streaming Avatar API,
-providing personalized and scalable interactions.
-• Deploy your frontend using Appwrite, the open-source, all-in-one development
-platform that offers built-in backend infrastructure, real-time features, and
-hosting for your web or mobile interface.
+- Use Agora’s Conversational AI Engine to handle live, real-time voice
+  communication.
+- Generate speech through ElevenLabs’ text-to-speech API, which offers emotional
+  depth and rich delivery for lifelike voices.
+- Present an engaging visual presence through HeyGen’s Streaming Avatar API,
+  providing personalized and scalable interactions.
+- Deploy your frontend using Appwrite, all-in-one development
+  platform that offers built-in backend infrastructure, real-time features, and
+  hosting for your web or mobile interface.
 
 Your project must integrate all three partner technologies. Submissions that omit
 any of these partners will not qualify for judging. Think creatively about how to
