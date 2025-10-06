@@ -5,6 +5,9 @@ agents that do more than just speak. You’ll use Agora’s Conversational AI En
 the backbone of your agents, integrate ElevenLabs for realistic and expressive
 speech, bring your agent to life with HeyGen’s lifelike video avatars, and deploy
 your frontend with Appwrite’s all-in-one open-source development platform.
+
+The Agora Hackathon kicks off on Monday, October 6 at 6 PM Pacific Time and runs until Thursday, October 9 at 3 PM Pacific Time. No submissions will be accepted after 3 PM on Thursday.
+
 This repository serves as the central hub for hackathon submissions and resources.
 
 ## **Theme: Beyond Voice—Agents That Do More**
@@ -69,7 +72,7 @@ Example:
 submissions/
 ├── team-name/
 │ ├── README.md # (Required: Describe your project)
-│ ├── demo.mp4 # (Required: A demo video)
+│ ├── demo.mp4 # (Required: A 1–2 minute demo video focusing on core features and work done)
 │ ├── src/ # (Your source code)
 │ └── docs/ # (Any documentation or images)
 
@@ -77,7 +80,7 @@ submissions/
 
 - Develop your project inside your team folder.
 - Include a `README.md` file explaining your project, its setup, and usage. Include any special instructions to run it.
-- Include a short demo video or screenshots in the `docs/` folder.
+- Include a 1–2 minute demo video focusing on core features and work done in the `docs/` folder.
 
 ### **5. Commit and Push Changes**
 
