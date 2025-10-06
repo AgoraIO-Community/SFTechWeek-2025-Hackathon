@@ -8,6 +8,10 @@ your frontend with Appwrite’s all-in-one development platform.
 
 The Agora Hackathon kicks off on Monday, October 6 at 6 PM Pacific Time and runs until Thursday, October 9 at 3 PM Pacific Time. No submissions will be accepted after 3 PM on Thursday.
 
+Teams are allowed to be 1-4 members.
+
+Teams must be registered here: https://blippardev.typeform.com/to/vn74Lq8B
+
 This repository serves as the central hub for hackathon submissions and resources.
 
 ## **Theme: Beyond Voice—Agents That Do More**
