@@ -1,4 +1,4 @@
-# Agora Hackathon: Beyond Voice [June 2025]
+# Agora Hackathon: Beyond Voice [October 2025]
 
 Welcome to the Agora Hackathon! This hackathon challenges you to build voice-first
 agents that do more than just speak. You’ll use Agora’s Conversational AI Engine as
