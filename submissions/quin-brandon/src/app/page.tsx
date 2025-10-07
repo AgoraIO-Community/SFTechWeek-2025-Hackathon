@@ -8,16 +8,13 @@ import { useConversation } from "@/hooks/useConversation"
 
 export default function MarketAvatarDashboard() {
   const [isMuted, setIsMuted] = useState(false)
-  const [captions, setCaptions] = useState<Array<{ type: "user" | "ai"; text: string }>>([
-    { type: "user", text: "Give me a market update" },
-    { type: "ai", text: "The S&P 500 is up 0.8% today, driven by strong tech sector performance..." },
-  ])
 
   // Use Agora Conversational AI hook
   const { 
     isActive, 
     isLoading, 
-    error, 
+    error,
+    captions,
     toggleConversation 
   } = useConversation()
 
@@ -28,10 +25,6 @@ export default function MarketAvatarDashboard() {
   useEffect(() => {
     if (error) {
       console.error('[Dashboard] Conversation error:', error)
-      setCaptions((prev) => [...prev, { 
-        type: "ai", 
-        text: `Error: ${error}` 
-      }])
     }
   }, [error])
 

@@ -7,12 +7,19 @@ import type {
   IRemoteAudioTrack
 } from 'agora-rtc-sdk-ng';
 
+interface Caption {
+  type: 'user' | 'ai';
+  text: string;
+  timestamp: number;
+}
+
 interface ConversationState {
   isActive: boolean;
   isLoading: boolean;
   error: string | null;
   conversationName: string | null;
   channelName: string | null;
+  captions: Caption[];
 }
 
 export function useConversation() {
@@ -22,11 +29,43 @@ export function useConversation() {
     error: null,
     conversationName: null,
     channelName: null,
+    captions: [],
   });
 
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const conversationNameRef = useRef<string | null>(null);
   const agentIdRef = useRef<string | null>(null);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  /**
+   * Add a caption to the list
+   */
+  const addCaption = useCallback((type: 'user' | 'ai', text: string) => {
+    setState(prev => ({
+      ...prev,
+      captions: [...prev.captions, { type, text, timestamp: Date.now() }]
+    }));
+  }, []);
+
+  /**
+   * Poll for new transcripts
+   */
+  const pollTranscripts = useCallback(async (conversationId: string) => {
+    try {
+      const response = await fetch(`/api/conversation/transcripts?conversationId=${conversationId}`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Update state with new transcripts
+        setState(prev => ({
+          ...prev,
+          captions: data.transcripts || []
+        }));
+      }
+    } catch (error) {
+      console.error('[useConversation] Error polling transcripts:', error);
+    }
+  }, []);
 
   /**
    * Start a conversation
@@ -116,13 +155,21 @@ export function useConversation() {
       await client.publish([microphoneTrack]);
       console.log('[useConversation] Published microphone track');
 
-      setState({
+      setState(prev => ({
+        ...prev,
         isActive: true,
         isLoading: false,
         error: null,
         conversationName: data.conversationName,
         channelName: channelName,
-      });
+      }));
+
+      // Start polling for transcripts every 2 seconds
+      pollIntervalRef.current = setInterval(() => {
+        pollTranscripts('default'); // Using 'default' as conversationId
+      }, 2000);
+
+      console.log('[useConversation] Started transcript polling');
 
     } catch (error) {
       console.error('[useConversation] Error starting conversation:', error);
@@ -154,6 +201,13 @@ export function useConversation() {
         });
       }
 
+      // Stop polling
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+        console.log('[useConversation] Stopped transcript polling');
+      }
+
       // Leave RTC channel and cleanup
       if (clientRef.current) {
         await clientRef.current.leave();
@@ -170,6 +224,12 @@ export function useConversation() {
         error: null,
         conversationName: null,
         channelName: null,
+        captions: [], // Clear captions on stop
+      });
+
+      // Clear transcript store
+      await fetch('/api/conversation/transcripts?conversationId=default', {
+        method: 'DELETE',
       });
 
       console.log('[useConversation] Conversation stopped');
@@ -201,6 +261,7 @@ export function useConversation() {
     error: state.error,
     conversationName: state.conversationName,
     channelName: state.channelName,
+    captions: state.captions,
     startConversation,
     stopConversation,
     toggleConversation,

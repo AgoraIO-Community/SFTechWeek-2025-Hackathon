@@ -27,11 +27,34 @@ export async function POST(request: NextRequest) {
     // Extract params including stream flag
     const { messages, temperature = 0.7, max_tokens = 512, top_p = 0.95, stream = false } = body;
 
+    const lastUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    
     console.log('[Custom LLM] Request from Agora:', {
       messageCount: messages.length,
-      lastUserMessage: messages.filter(m => m.role === 'user').pop()?.content?.substring(0, 100),
+      lastUserMessage: lastUserMessage.substring(0, 100),
       streamRequested: stream,
     });
+
+    // Log user message to transcript store (for live captions)
+    // Extract conversationId from headers if available
+    const conversationId = request.headers.get('x-conversation-id') || 'default';
+    if (lastUserMessage && lastUserMessage.trim()) {
+      try {
+        // Use localhost for internal API calls to avoid SSL issues with ngrok
+        const internalUrl = process.env.NEXT_PUBLIC_INTERNAL_URL || 'http://localhost:3000';
+        await fetch(`${internalUrl}/api/conversation/transcripts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            conversationId,
+            type: 'user',
+            text: lastUserMessage,
+          }),
+        });
+      } catch (e) {
+        console.error('[Custom LLM] Failed to log user transcript:', e);
+      }
+    }
 
     // Get Groq configuration
     const groqApiKey = process.env.LLM_API_KEY;
@@ -82,6 +105,24 @@ export async function POST(request: NextRequest) {
       console.log('[Custom LLM] Generated response, converting to SSE:', {
         preview: assistantMessage.substring(0, 100) + '...',
       });
+
+      // Log AI response to transcript store
+      if (assistantMessage && assistantMessage.trim()) {
+        try {
+          const internalUrl = process.env.NEXT_PUBLIC_INTERNAL_URL || 'http://localhost:3000';
+          await fetch(`${internalUrl}/api/conversation/transcripts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              conversationId,
+              type: 'ai',
+              text: assistantMessage,
+            }),
+          });
+        } catch (e) {
+          console.error('[Custom LLM] Failed to log AI transcript:', e);
+        }
+      }
 
       // Create SSE stream
       const encoder = new TextEncoder();
@@ -161,6 +202,24 @@ export async function POST(request: NextRequest) {
       preview: assistantMessage.substring(0, 100) + '...',
       tokens: groqData.usage,
     });
+
+    // Log AI response to transcript store (non-streaming path)
+    if (assistantMessage && assistantMessage.trim()) {
+      try {
+        const internalUrl = process.env.NEXT_PUBLIC_INTERNAL_URL || 'http://localhost:3000';
+        await fetch(`${internalUrl}/api/conversation/transcripts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            conversationId,
+            type: 'ai',
+            text: assistantMessage,
+          }),
+        });
+      } catch (e) {
+        console.error('[Custom LLM] Failed to log AI transcript:', e);
+      }
+    }
 
     // Return minimal OpenAI-compatible format (no streaming, no extra fields)
     const response = {
