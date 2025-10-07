@@ -75,19 +75,10 @@ export async function POST(request: NextRequest) {
       tokens: groqData.usage,
     });
 
-    // Return in format expected by Agora
-    return NextResponse.json({
-      choices: [
-        {
-          message: {
-            role: 'assistant',
-            content: assistantMessage,
-          },
-          finish_reason: 'stop',
-        },
-      ],
-      usage: groqData.usage,
-    });
+    console.log('[Custom LLM] Full response:', JSON.stringify(groqData));
+
+    // Return the exact format from Groq (Agora expects OpenAI format)
+    return NextResponse.json(groqData);
 
   } catch (error) {
     console.error('[Custom LLM] Error:', error);

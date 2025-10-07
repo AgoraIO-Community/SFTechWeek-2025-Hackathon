@@ -176,6 +176,9 @@ Be conversational but authoritative. Speak clearly and at a moderate pace.`,
     const data = await response.json();
     console.log('[Conversation Start] Success!', data);
 
+    // Extract agent_id from Agora response
+    const agentId = data.agent_id || conversationName;
+
     return NextResponse.json({
       success: true,
       conversationName,
@@ -184,6 +187,7 @@ Be conversational but authoritative. Speak clearly and at a moderate pace.`,
       appId: config.appId,
       userToken,
       userId: userId || 0,
+      agentId,  // This is what we need for stopping
       data,
     });
 

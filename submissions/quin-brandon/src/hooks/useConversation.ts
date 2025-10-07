@@ -26,6 +26,7 @@ export function useConversation() {
 
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const conversationNameRef = useRef<string | null>(null);
+  const agentIdRef = useRef<string | null>(null);
 
   /**
    * Start a conversation
@@ -40,11 +41,14 @@ export function useConversation() {
       console.log('[useConversation] Starting conversation...', { channelName });
 
       // Call backend to start Agora Conversational AI session
+      // Generate a numeric user ID
+      const numericUserId = userId ? parseInt(userId) : Math.floor(Math.random() * 1000000);
+      
       const response = await fetch('/api/conversation/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          userId: userId || `user-${Date.now()}`,
+          userId: numericUserId,
           channelName 
         }),
       });
@@ -58,6 +62,7 @@ export function useConversation() {
       console.log('[useConversation] Backend response:', data);
 
       conversationNameRef.current = data.conversationName;
+      agentIdRef.current = data.agentId;
 
       // Dynamically import Agora RTC SDK (client-side only)
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
@@ -139,12 +144,12 @@ export function useConversation() {
       console.log('[useConversation] Stopping conversation...');
 
       // Stop Agora Conversational AI session
-      if (conversationNameRef.current) {
+      if (agentIdRef.current) {
         await fetch('/api/conversation/stop', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            conversationName: conversationNameRef.current 
+            conversationName: agentIdRef.current  // Use agentId from Agora
           }),
         });
       }
@@ -157,6 +162,7 @@ export function useConversation() {
       }
 
       conversationNameRef.current = null;
+      agentIdRef.current = null;
 
       setState({
         isActive: false,

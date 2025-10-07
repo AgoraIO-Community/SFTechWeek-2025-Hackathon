@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     console.log('[Conversation Stop] Stopping conversation:', conversationName);
 
     // Call Agora API to stop the conversation
-    const agoraUrl = `${config.agoraBaseUrl}/${config.appId}/leave`;
+    const agoraUrl = `${config.agoraBaseUrl}/${config.appId}/agents/${conversationName}/leave`;
     
     const response = await fetch(agoraUrl, {
       method: 'POST',
