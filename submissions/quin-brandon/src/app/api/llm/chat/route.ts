@@ -21,11 +21,16 @@ interface LLMRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: LLMRequest = await request.json();
-    const { messages, temperature = 0.7, max_tokens = 512, top_p = 0.95 } = body;
+    
+    console.log('[Custom LLM] Full incoming request:', JSON.stringify(body, null, 2));
+    
+    // Extract params including stream flag
+    const { messages, temperature = 0.7, max_tokens = 512, top_p = 0.95, stream = false } = body;
 
     console.log('[Custom LLM] Request from Agora:', {
       messageCount: messages.length,
       lastUserMessage: messages.filter(m => m.role === 'user').pop()?.content?.substring(0, 100),
+      streamRequested: stream,
     });
 
     // Get Groq configuration
@@ -40,7 +45,89 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call Groq LLM
+    // If Agora requests streaming, return SSE format
+    if (stream) {
+      console.log('[Custom LLM] Streaming response requested - will return SSE');
+
+      // Call Groq WITHOUT streaming, then convert to SSE
+      const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${groqApiKey}`,
+        },
+        body: JSON.stringify({
+          model: groqModel,
+          messages: messages,
+          temperature: temperature,
+          max_tokens: max_tokens,
+          top_p: top_p,
+          stream: false,
+        }),
+      });
+
+      if (!groqResponse.ok) {
+        const errorText = await groqResponse.text();
+        console.error('[Custom LLM] Groq error:', errorText);
+        return NextResponse.json(
+          { error: 'LLM request failed' },
+          { status: groqResponse.status }
+        );
+      }
+
+      const groqData = await groqResponse.json();
+      const assistantMessage = groqData.choices[0]?.message?.content || 
+                              'I apologize, but I couldn\'t process that request.';
+
+      console.log('[Custom LLM] Generated response, converting to SSE:', {
+        preview: assistantMessage.substring(0, 100) + '...',
+      });
+
+      // Create SSE stream
+      const encoder = new TextEncoder();
+      const readableStream = new ReadableStream({
+        start(controller) {
+          // Send the message as a single delta chunk
+          const chunk = {
+            choices: [{
+              index: 0,
+              delta: {
+                role: "assistant",
+                content: assistantMessage
+              },
+              finish_reason: null
+            }]
+          };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+
+          // Send finish chunk
+          const finishChunk = {
+            choices: [{
+              index: 0,
+              delta: {},
+              finish_reason: "stop"
+            }]
+          };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(finishChunk)}\n\n`));
+
+          // Send DONE
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          
+          console.log('[Custom LLM] SSE stream completed');
+          controller.close();
+        }
+      });
+
+      return new Response(readableStream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+        },
+      });
+    }
+
+    // Non-streaming response (fallback)
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -53,7 +140,7 @@ export async function POST(request: NextRequest) {
         temperature: temperature,
         max_tokens: max_tokens,
         top_p: top_p,
-        stream: false,
+        stream: false,  // We return non-streaming to Agora, it handles streaming
       }),
     });
 
@@ -75,10 +162,21 @@ export async function POST(request: NextRequest) {
       tokens: groqData.usage,
     });
 
-    console.log('[Custom LLM] Full response:', JSON.stringify(groqData));
+    // Return minimal OpenAI-compatible format (no streaming, no extra fields)
+    const response = {
+      choices: [{
+        index: 0,
+        message: {
+          role: "assistant",
+          content: assistantMessage
+        },
+        finish_reason: "stop"
+      }]
+    };
 
-    // Return the exact format from Groq (Agora expects OpenAI format)
-    return NextResponse.json(groqData);
+    console.log('[Custom LLM] Returning response:', JSON.stringify(response));
+
+    return NextResponse.json(response);
 
   } catch (error) {
     console.error('[Custom LLM] Error:', error);
