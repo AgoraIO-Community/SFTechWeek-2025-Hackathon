@@ -1,54 +1,130 @@
-# Agora Hackathon Template
+# Agora Hackathon: Beyond Voice [October 2025]
 
-This repository serves as a template for creating new Agora hackathon repositories. It provides a streamlined way to set up hackathon documentation with consistent formatting and structure. It includes a setup script to automatically generate the README.md, hackathon-rating-rubric.md, and Thought_Starters.md files.
+Welcome to the Agora Hackathon! This hackathon challenges you to build voice-first
+agents that do more than just speak. You’ll use Agora’s Conversational AI Engine as
+the backbone of your agents, integrate ElevenLabs for realistic and expressive
+speech, bring your agent to life with HeyGen’s lifelike video avatars, and deploy
+your frontend with Appwrite’s all-in-one development platform.
 
-## Quick Start
+The Agora Hackathon kicks off on Monday, October 6 at 6 PM Pacific Time and runs until Thursday, October 9 at 3 PM Pacific Time. No submissions will be accepted after 3 PM on Thursday.
 
-1. **Create a new repository** using this template (click the "Use this template" button on GitHub)  
-   ![How to create a new repository from this template](./.github/images/create_from_template_small.gif)
-2. **Update the configuration** in `hackathon_config.yaml` with your event details
-3. **Run the generator**:
-   ```bash
-   npm install
-   npm run setup
-   ```
-4. **Review and commit** the customized files
+Teams are allowed to be 1-4 members.
 
-That's it! The setup script will automatically generate all necessary documentation files and clean up after itself.
+Teams must be registered here: https://blippardev.typeform.com/to/vn74Lq8B
 
-## What Gets Generated
+This repository serves as the central hub for hackathon submissions and resources.
 
-The generator will create three main files:
+## **Theme: Beyond Voice—Agents That Do More**
 
-1. `README.md` - Main hackathon documentation
-2. `hackathon-rating-rubric.md` - Judging criteria and scoring
-3. `Thought_Starters.md` - Project ideas and inspiration
-4. `evaluation_template.md` - Evaluation template based on the judging criteria
+In this specific-theme hackathon, you must build a real-time, multimodal agent that
+goes beyond simple call-and-response. Your agent should:
 
-## Configuration
+- Use Agora’s Conversational AI Engine to handle live, real-time voice
+  communication.
+- Generate speech through ElevenLabs’ text-to-speech API, which offers emotional
+  depth and rich delivery for lifelike voices.
+- Present an engaging visual presence through HeyGen’s Streaming Avatar API,
+  providing personalized and scalable interactions.
+- Deploy your frontend using Appwrite, all-in-one development
+  platform that offers built-in backend infrastructure, real-time features, and
+  hosting for your web or mobile interface.
 
-The `hackathon_config.yaml` file contains all the customizable elements:
+Your project must integrate all three partner technologies. Submissions that omit
+any of these partners will not qualify for judging. Think creatively about how to
+orchestrate voice, avatars, and real-time actions to deliver an immersive user
+experience.
 
-- `event`: Event details
-- `theme`: Hackathon theme and focus areas
-  - `type`: Either 'specific' or 'open'
-  - `title`: Theme title (for specific themes)
-  - `description`: Theme description
-  - `focus_areas`: List of specific areas to focus on
-  - `technologies`: List of recommended technologies
-- `contact`: Contact information
-- `submission_guidelines`: Submission guidelines
-- `judging_criteria`: Judging criteria
-- `thought_starters`: Project ideas and inspiration
+### Focus Areas
 
-## After Generation
+- Real‑time voice and video communication
+- Expressive TTS and visual avatars
+- Multi‑modal AI interactions & analytics
+- Interactive live streaming & gamification
 
-After running the generator:
+### Recommended Technologies
 
-1. Review the generated files
-2. Make any necessary manual adjustments
-3. Commit the changes to your repository
+- Agora Conversational AI Engine
+- Agora RTC SDK
+- ElevenLabs TTS
+- HeyGen Video Avatar
+- Appwrite
 
-## Support
+Follow the steps below to **fork, develop, and submit** your project.
 
-For questions or issues, please contact the Agora Developer Relations team.
+---
+
+## 📌 **Submission Guidelines**
+
+### **1. Fork this Repository**
+
+Click the Fork button on the top right to create a copy of this repository under your GitHub account.
+
+### **2. Clone Your Forked Repository**
+
+After forking, clone the repository to your local machine.
+
+```bash
+git clone https://github.com/YOUR-GITHUB-USERNAME/SFTechWeek-2025-Hackathon.git
+cd SFTechWeek-2025-Hackathon
+```
+
+### **3. Create Your Team Folder**
+
+Inside the `submissions/` directory, create a new folder using your team name.  
+Example:
+
+submissions/
+├── team-name/
+│ ├── README.md # (Required: Describe your project)
+│ ├── demo.mp4 # (Required: A 1–2 minute demo video focusing on core features and work done)
+│ ├── src/ # (Your source code)
+│ └── docs/ # (Any documentation or images)
+
+### **4. Work on Your Project**
+
+- Develop your project inside your team folder.
+- Include a `README.md` file explaining your project, its setup, and usage. Include any special instructions to run it.
+- Include a 1–2 minute demo video focusing on core features and work done in the `docs/` folder.
+
+### **5. Commit and Push Changes**
+
+```bash
+git add .
+git commit -m "Submission commit - Team [Your Team Name]"
+git push
+```
+
+### **6. Submit via Pull Request**
+
+1. Go to your forked repo on GitHub.
+2. Click the **"New Pull Request"** button.
+3. Set the base repository to `AgoraIO-Community/SFTechWeek-2025-Hackathon` and compare it with your forked branch.
+4. In the PR description, include:
+   - Team Name
+   - Project Name
+   - A brief summary of the project
+   - Any special instructions of features to focus on or to avoid because they may not be finished. (If applicable)
+5. Click **"Create Pull Request"** to submit your project.
+
+---
+
+## 🏆 **Judging Criteria**
+
+Projects will be evaluated based on:
+
+✅ **Technical Innovation** – How effectively the project pushes the boundaries of voice, avatars, and real-time AI interaction.
+
+✅ **Experience Design** – How natural, engaging, and immersive the agent feels for users.
+
+✅ **Integration & Use of Partner Tech** – Correct and innovative use of Agora Conversational AI Engine, ElevenLabs, HeyGen, and Appwrite.
+
+✅ **Deployment & Documentation** – Working prototype deployed on Appwrite, clear documentation, and ease of testing by judges.
+
+---
+
+## ❓ **Need Help?**
+
+For any questions, join our [Discord channel](https://discord.gg/YsGfC7pG).
+The team will be monitoring the channel for questions and feedback.
+
+**Happy hacking and good luck!** 🚀
