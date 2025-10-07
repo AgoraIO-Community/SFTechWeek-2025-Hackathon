@@ -10,29 +10,20 @@ The Agora Hackathon kicks off on Monday, October 6 at 6 PM Pacific Time and r
 
 Teams are allowed to be 1-4 members.
 
-Teams must be registered here: https://blippardev.typeform.com/to/vn74Lq8B
+Teams must be registered here: https://form.typeform.com/to/wMYc4KxQ
 
 This repository serves as the central hub for hackathon submissions and resources.
 
 ## **Theme: Beyond Voice—Agents That Do More**
 
-In this specific-theme hackathon, you must build a real-time, multimodal agent that
-goes beyond simple call-and-response. Your agent should:
+In this theme, you’ll build a real-time, multimodal voice agent that does more than just respond — it listens, thinks, and performs. Your agent should integrate all core technologies to deliver a truly interactive, voice-to-voice AI experience:
+- Agora Conversational AI Engine — Handle live, low-latency voice capture, transmission, and delivery.
+- Groq LLM — Process text inputs with ultra-fast inference to generate intelligent, context-aware responses in real time.
+- ElevenLabs TTS — Convert Groq’s responses into expressive, human-like speech with emotional depth and clarity.
+- HeyGen Streaming Avatar API — Bring your agent to life with a photorealistic avatar that reacts naturally to speech and emotion.
+- Appwrite — Deploy your frontend and backend on a unified platform with built-in real-time databases, authentication, and hosting for your web or mobile app.
 
-- Use Agora’s Conversational AI Engine to handle live, real-time voice
-  communication.
-- Generate speech through ElevenLabs’ text-to-speech API, which offers emotional
-  depth and rich delivery for lifelike voices.
-- Present an engaging visual presence through HeyGen’s Streaming Avatar API,
-  providing personalized and scalable interactions.
-- Deploy your frontend using Appwrite, all-in-one development
-  platform that offers built-in backend infrastructure, real-time features, and
-  hosting for your web or mobile interface.
-
-Your project must integrate all three partner technologies. Submissions that omit
-any of these partners will not qualify for judging. Think creatively about how to
-orchestrate voice, avatars, and real-time actions to deliver an immersive user
-experience.
+Your project must integrate all five partner technologies. Submissions that omit any of these partners will not qualify for judging. Think creatively about how to orchestrate voice, avatars, and real-time actions to deliver an immersive user experience.
 
 ### Focus Areas
 
@@ -45,9 +36,11 @@ experience.
 
 - Agora Conversational AI Engine
 - Agora RTC SDK
-- ElevenLabs TTS
-- HeyGen Video Avatar
 - Appwrite
+- ElevenLabs TTS
+- Groq
+- HeyGen Video Avatar
+
 
 Follow the steps below to **fork, develop, and submit** your project.
 
