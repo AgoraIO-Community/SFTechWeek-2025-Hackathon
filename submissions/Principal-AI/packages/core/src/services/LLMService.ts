@@ -22,7 +22,8 @@ export class LLMService {
 
   constructor(config: LLMServiceConfig) {
     this.groq = new Groq({ apiKey: config.apiKey });
-    this.model = config.model || "llama-3.3-70b-versatile";
+    // Default to speech-optimized model for conversational AI
+    this.model = config.model || "llama-3.1-8b-instant";
   }
 
   /**
