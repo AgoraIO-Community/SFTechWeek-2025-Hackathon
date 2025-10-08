@@ -1,11 +1,27 @@
 {
-  "name": "@principal/core",
+  "name": "@principal-ade/ai-brain",
   "version": "0.1.0",
-  "private": true,
   "description": "Core library for Principal AI - GitHub parsing and LLM services",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgoraIO-Community/SFTechWeek-2025-Hackathon.git",
+    "directory": "submissions/Principal-AI/packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist/adapters",
+    "dist/services",
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/index.js.map",
+    "dist/index.d.ts.map",
+    "README.md"
+  ],
   "scripts": {
     "build": "bun run clean && bun run build:lib",
     "clean": "rm -rf dist",
