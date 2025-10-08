@@ -1,0 +1,49 @@
+{
+  "name": "@principal/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Core library for Principal AI - GitHub parsing and LLM services",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun run clean && bun run build:lib",
+    "clean": "rm -rf dist",
+    "build:lib": "tsc",
+    "dev": "tsc --watch",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "lint": "bunx eslint . --ext .ts,.js --max-warnings 0",
+    "lint:fix": "bunx eslint . --ext .ts,.js --fix",
+    "format": "bunx prettier --write .",
+    "format:check": "bunx prettier --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "principal-ai",
+    "github",
+    "llm",
+    "groq"
+  ],
+  "author": "Principal AI Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@a24z/core-library": "latest",
+    "globby": "^15.0.0",
+    "groq-sdk": "^0.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/bun": "^1.1.20",
+    "@types/node": "^22.15.26",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "typescript": "^5.6.3"
+  }
+}
