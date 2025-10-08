@@ -13,4 +13,9 @@ export { GitHubGlobAdapter } from "./adapters/GitHubGlobAdapter";
 
 // LLM Service
 export { LLMService } from "./services/LLMService";
-export type { LLMServiceConfig, GenerateResponseOptions } from "./services/LLMService";
+export type {
+  LLMServiceConfig,
+  GenerateResponseOptions,
+  ConversationMessage,
+  ConversationResponseOptions
+} from "./services/LLMService";

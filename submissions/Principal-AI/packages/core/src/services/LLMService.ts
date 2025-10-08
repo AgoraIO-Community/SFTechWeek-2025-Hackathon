@@ -16,6 +16,17 @@ export interface GenerateResponseOptions {
   maxTokens?: number;
 }
 
+export interface ConversationMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface ConversationResponseOptions {
+  stream?: boolean;
+  temperature?: number;
+  maxTokens?: number;
+}
+
 export class LLMService {
   private groq: Groq;
   private model: string;
@@ -150,6 +161,100 @@ ${guidance.guidance}
     const messages = [
       { role: "system" as const, content: systemPrompt },
       { role: "user" as const, content: question },
+    ];
+
+    const stream = await this.groq.chat.completions.create({
+      messages,
+      model: this.model,
+      stream: true,
+      temperature,
+      max_tokens: maxTokens,
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      if (content) {
+        yield content;
+      }
+    }
+  }
+
+  /**
+   * Generate a conversational response with history
+   * Returns the assistant's response that should be added to history
+   */
+  async generateConversationResponse(
+    palace: MemoryPalace,
+    message: string,
+    conversationHistory: ConversationMessage[] = [],
+    options: ConversationResponseOptions = {}
+  ): Promise<string> {
+    const { stream = false, temperature = 0.7, maxTokens = 2000 } = options;
+
+    // Build system prompt with codebase context
+    const systemPrompt = this.buildSystemPrompt(palace);
+
+    // Build messages array: system + history + new message
+    const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      { role: "system", content: systemPrompt },
+      ...conversationHistory.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      { role: "user", content: message },
+    ];
+
+    if (stream) {
+      // Streaming response
+      const streamResponse = await this.groq.chat.completions.create({
+        messages,
+        model: this.model,
+        stream: true,
+        temperature,
+        max_tokens: maxTokens,
+      });
+
+      let fullResponse = "";
+      for await (const chunk of streamResponse) {
+        const content = chunk.choices[0]?.delta?.content || "";
+        fullResponse += content;
+        process.stdout.write(content); // Stream to console
+      }
+      console.log(); // New line after streaming
+      return fullResponse;
+    } else {
+      // Non-streaming response
+      const response = await this.groq.chat.completions.create({
+        messages,
+        model: this.model,
+        temperature,
+        max_tokens: maxTokens,
+      });
+
+      return response.choices[0]?.message?.content || "";
+    }
+  }
+
+  /**
+   * Generate streaming conversational response (returns async generator)
+   */
+  async *generateConversationStreamingResponse(
+    palace: MemoryPalace,
+    message: string,
+    conversationHistory: ConversationMessage[] = [],
+    options: ConversationResponseOptions = {}
+  ): AsyncGenerator<string, void, unknown> {
+    const { temperature = 0.7, maxTokens = 2000 } = options;
+
+    const systemPrompt = this.buildSystemPrompt(palace);
+
+    const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      { role: "system", content: systemPrompt },
+      ...conversationHistory.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      { role: "user", content: message },
     ];
 
     const stream = await this.groq.chat.completions.create({
