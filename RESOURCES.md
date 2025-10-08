@@ -23,6 +23,8 @@ HeyGen: https://docs.heygen.com/
 - Example using Agora React SDK with Conversational AI engine (audio visualizer, no video): https://github.com/AgoraIO-Community/convo-ai-engine-dev-advocate-agent 
 - Example server (golang) for interacting with Agora's Conversational AI Engine: https://github.com/AgoraIO-Community/convo-ai-go-server
 
+- Convo AI Engine Playground: https://github.com/frank005/convo_ai (src) -- https://frank005.github.io/convo_ai/ (demo)
+
 ### Agora Convo AI Custom LLM
 
 - Custom LLM using Python: https://github.com/AgoraIO-Community/convo-ai-python-server
