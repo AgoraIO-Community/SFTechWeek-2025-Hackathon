@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { GitHubFileSystemAdapter } from "@principal-ade/ai-brain";
 import { MemoryPalace } from "@a24z/core-library";
-
-// Import the same cache instances from the chat route
-// This ensures both endpoints share the same cache
-import { palaceCache, adapterCache } from "../chat/route.js";
+import { palaceCache, adapterCache } from "@/lib/cache";
 
 export async function POST(request) {
   try {

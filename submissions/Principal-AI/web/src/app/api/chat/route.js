@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import { GitHubFileSystemAdapter, LLMService } from "@principal-ade/ai-brain";
 import { MemoryPalace } from "@a24z/core-library";
-
-// In-memory cache for MemoryPalace instances (keyed by sessionId)
-// In production, this should be Redis or similar
-// Exported so load-repo can share the same cache
-export const palaceCache = new Map();
-export const adapterCache = new Map();
+import { palaceCache, adapterCache } from "@/lib/cache";
 
 export async function POST(request) {
   try {

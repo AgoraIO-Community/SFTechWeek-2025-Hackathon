@@ -514,6 +514,29 @@ export default function DemoPage() {
                     {voiceStatus === "processing" && "Processing..."}
                     {voiceStatus === "speaking" && "Speaking..."}
                   </button>
+
+                  {/* Stop Speaking Button */}
+                  {voiceStatus === "speaking" && (
+                    <button
+                      onClick={() => {
+                        stopSpeaking();
+                        setVoiceStatus("idle");
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem",
+                        borderRadius: "6px",
+                        border: `1px solid ${theme.colors.border}`,
+                        backgroundColor: theme.colors.background,
+                        color: theme.colors.text,
+                        cursor: "pointer",
+                        fontWeight: "500",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Stop Speaking
+                    </button>
+                  )}
                 </div>
               </div>
 
