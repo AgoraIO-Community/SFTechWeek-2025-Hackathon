@@ -5,7 +5,7 @@
  * and LLM services for the Principal AI platform.
  */
 
-export const version = "0.3.0";
+export const version = "0.3.1";
 
 // Adapters for GitHub integration
 export { GitHubFileSystemAdapter } from "./adapters/GitHubFileSystemAdapter";
@@ -27,3 +27,11 @@ export type {
   QuestionType,
   IntentAnalysisResult
 } from "./services/ViewAwareContextBuilder";
+
+// Response Parser & Structured Response Types
+export { ResponseParser } from "./utils/ResponseParser";
+export type {
+  FileReference,
+  StructuredResponse,
+  StreamingChunk
+} from "./types/StructuredResponse";
