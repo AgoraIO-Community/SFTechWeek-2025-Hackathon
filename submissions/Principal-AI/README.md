@@ -4,9 +4,8 @@ A real-time ai principal engineer avatar that enables natural conversations with
 
 ## Demo
 
-[Demo Video Coming Soon]
-
-**Live Demo:** [Link to deployed application]
+In the repo
+**Live Demo:** [[Link to deployed application]](https://68e8279b730016e18086.appwrite.network/demo)
 
 ## What It Does
 
