@@ -181,7 +181,7 @@ export default function Home() {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              🚀 Launch Demo
+              Launch Demo
             </button>
           </a>
 
@@ -202,7 +202,7 @@ export default function Home() {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              🔧 View Integrations
+              View Integrations
             </button>
           </a>
         </div>
@@ -218,11 +218,11 @@ export default function Home() {
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
           {[
-            { title: "Groq LLM", desc: "Ultra-fast inference with llama-3.1-8b-instant for real-time responses" },
             { title: "Agora Voice", desc: "Real-time voice I/O and speech-to-text with WebRTC" },
-            { title: "HeyGen Avatar", desc: "Photorealistic AI avatar with lip-sync and streaming video" },
+            { title: "Alexandria", desc: "Structured codebase context from .alexandria/ documentation" },
+            { title: "Groq LLM", desc: "Ultra-fast inference with llama-3.1-8b-instant for real-time responses" },
             { title: "ElevenLabs TTS", desc: "Natural voice synthesis for professional-quality audio" },
-            { title: "MemoryPalace", desc: "Structured codebase context from .alexandria/ documentation" },
+            { title: "HeyGen Avatar", desc: "Photorealistic AI avatar with lip-sync and streaming video" },
           ].map((feature) => (
             <div
               key={feature.title}

@@ -3,12 +3,8 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@a24z/industry-theme";
 import Link from "next/link";
-
-interface ExampleRepo {
-  name: string;
-  url: string;
-  description: string;
-}
+import { useVoiceInput } from "@/hooks/useVoiceInput";
+import { LoadingAnimation } from "@/components/LoadingAnimation";
 
 interface ConversationMessage {
   role: "user" | "assistant";
@@ -24,12 +20,27 @@ export default function DemoPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRepoLoaded, setIsRepoLoaded] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionId] = useState<string>(() => `session-${Date.now()}-${Math.random().toString(36).substring(7)}`);
 
   // Conversation state
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>("idle");
+  const [textInput, setTextInput] = useState<string>("");
+  const [isSending, setIsSending] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAvatarReady, setIsAvatarReady] = useState<boolean>(false);
+
+  // Voice input hook
+  const {
+    isListening,
+    transcript,
+    interimTranscript,
+    error: voiceError,
+    isSupported: isVoiceSupported,
+    startListening,
+    stopListening,
+    resetTranscript,
+  } = useVoiceInput();
 
   // Set body background and html background color to match theme
   useEffect(() => {
@@ -45,45 +56,117 @@ export default function DemoPage() {
     };
   }, [theme.colors.background]);
 
-  const handleLoadRepo = async (): Promise<void> => {
-    if (!repoUrl.trim()) {
-      setError("Please enter a GitHub repository URL");
-      return;
+  // Handle voice transcript completion
+  useEffect(() => {
+    if (transcript && !isListening && voiceStatus === "listening") {
+      // Voice input complete, send the message
+      setVoiceStatus("processing");
+      handleSendMessage(transcript);
+      resetTranscript();
     }
+  }, [transcript, isListening, voiceStatus]);
 
+  const handleLoadRepo = async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
+    setRepoUrl(SUPPORTED_REPO);
 
     try {
-      // TODO: Call API to load repository
-      // For now, simulate loading
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch("/api/load-repo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to load repository");
+      }
+
+      console.log("Repository loaded:", data);
       setIsRepoLoaded(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to load repository";
       setError(errorMessage);
+      console.error("Error loading repository:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const exampleRepos: ExampleRepo[] = [
-    {
-      name: "Example Repo 1",
-      url: "https://github.com/example/repo1",
-      description: "Sample repository with MemoryPalace structure",
-    },
-    {
-      name: "Example Repo 2",
-      url: "https://github.com/example/repo2",
-      description: "Another example with .alexandria/ docs",
-    },
-  ];
+  // Currently supported repository
+  const SUPPORTED_REPO = "https://github.com/a24z-ai/core-library";
+
+  const handleSendMessage = async (message: string): Promise<void> => {
+    if (!message.trim() || isSending) return;
+
+    setIsSending(true);
+    setVoiceStatus("processing");
+
+    // Add user message to history
+    const userMessage: ConversationMessage = {
+      role: "user",
+      content: message,
+      timestamp: new Date(),
+    };
+    setConversationHistory((prev) => [...prev, userMessage]);
+    setTextInput("");
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+          conversationHistory: conversationHistory.map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+          })),
+          sessionId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to get response");
+      }
+
+      // Add assistant response to history
+      const assistantMessage: ConversationMessage = {
+        role: "assistant",
+        content: data.response,
+        timestamp: new Date(),
+      };
+      setConversationHistory((prev) => [...prev, assistantMessage]);
+      setVoiceStatus("idle");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to send message";
+      console.error("Error sending message:", err);
+      // Add error message to chat
+      const errorMsg: ConversationMessage = {
+        role: "assistant",
+        content: `Error: ${errorMessage}`,
+        timestamp: new Date(),
+      };
+      setConversationHistory((prev) => [...prev, errorMsg]);
+      setVoiceStatus("idle");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div
       style={{
         width: "100%",
+        minHeight: "100vh",
+        backgroundColor: theme.colors.background,
         color: theme.colors.text,
         fontFamily: theme.fonts.body,
       }}
@@ -123,7 +206,7 @@ export default function DemoPage() {
         </p>
 
         {!isRepoLoaded ? (
-          /* Repository Input Section */
+          /* Repository Loading Section */
           <div>
             {/* Main Card */}
             <div
@@ -133,6 +216,7 @@ export default function DemoPage() {
                 borderRadius: "8px",
                 border: `1px solid ${theme.colors.border}`,
                 marginBottom: "2rem",
+                textAlign: "center",
               }}
             >
               <h2
@@ -142,50 +226,33 @@ export default function DemoPage() {
                   marginBottom: "1rem",
                 }}
               >
-                Load Your Codebase
+                Load Demo Repository
               </h2>
               <p style={{ marginBottom: "1rem", color: theme.colors.textSecondary }}>
-                Enter a GitHub repository URL to start a conversation with your AI Principal Engineer.
+                This demo uses the <strong>a24z-ai/core-library</strong> repository with Alexandria documentation.
               </p>
               <p style={{ marginBottom: "1.5rem", color: theme.colors.textSecondary, fontSize: "0.95rem" }}>
-                The repository should contain a <code style={{
+                The repository contains a <code style={{
                   backgroundColor: theme.colors.background,
                   padding: "0.25rem 0.5rem",
                   borderRadius: "4px",
                   fontFamily: theme.fonts.monospace
-                }}>.alexandria/</code> directory with MemoryPalace documentation.
+                }}>.alexandria/</code> directory with structured codebase views, notes, and guidance.
               </p>
 
-              <label
-                htmlFor="repo-url"
+              <div
                 style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "500",
-                  color: theme.colors.text,
+                  backgroundColor: theme.colors.background,
+                  padding: "1rem",
+                  borderRadius: "6px",
+                  border: `1px solid ${theme.colors.border}`,
+                  marginBottom: "1.5rem",
+                  fontFamily: theme.fonts.monospace,
+                  fontSize: "0.95rem",
                 }}
               >
-                GitHub Repository URL
-              </label>
-              <input
-                id="repo-url"
-                type="text"
-                value={repoUrl}
-                onChange={(e) => setRepoUrl(e.target.value)}
-                placeholder="https://github.com/username/repository"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem 1rem",
-                  backgroundColor: theme.colors.background,
-                  color: theme.colors.text,
-                  border: `1px solid ${theme.colors.border}`,
-                  borderRadius: "6px",
-                  fontSize: "1rem",
-                  fontFamily: theme.fonts.body,
-                  marginBottom: "1rem",
-                }}
-                disabled={isLoading}
-              />
+                {SUPPORTED_REPO}
+              </div>
 
               {error && (
                 <div
@@ -202,89 +269,25 @@ export default function DemoPage() {
                 </div>
               )}
 
-              <button
-                onClick={handleLoadRepo}
-                disabled={isLoading || !repoUrl.trim()}
-                style={{
-                  backgroundColor:
-                    isLoading || !repoUrl.trim()
-                      ? "#6b7280"
-                      : theme.colors.primary,
-                  color: theme.colors.background,
-                  padding: "0.75rem 1.5rem",
-                  borderRadius: "6px",
-                  border: "none",
-                  cursor:
-                    isLoading || !repoUrl.trim() ? "not-allowed" : "pointer",
-                  fontWeight: "500",
-                  fontSize: "1rem",
-                  opacity: isLoading || !repoUrl.trim() ? 0.6 : 1,
-                }}
-              >
-                {isLoading ? "🔄 Loading Repository..." : "▶ Load Repository"}
-              </button>
-            </div>
-
-            {/* Example Repositories */}
-            <div
-              style={{
-                backgroundColor: theme.colors.backgroundSecondary,
-                padding: "2rem",
-                borderRadius: "8px",
-                border: `1px solid ${theme.colors.border}`,
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "600",
-                  marginBottom: "1rem",
-                }}
-              >
-                Example Repositories
-              </h2>
-              <p style={{ marginBottom: "1.5rem", color: theme.colors.textSecondary, fontSize: "0.95rem" }}>
-                Click an example to load it automatically
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {exampleRepos.map((example) => (
-                  <button
-                    key={example.url}
-                    onClick={() => setRepoUrl(example.url)}
-                    style={{
-                      width: "100%",
-                      textAlign: "left",
-                      padding: "1rem",
-                      backgroundColor: theme.colors.background,
-                      color: theme.colors.text,
-                      border: `1px solid ${theme.colors.border}`,
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      transition: "border-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = theme.colors.border;
-                    }}
-                  >
-                    <div style={{ fontWeight: "600", marginBottom: "0.25rem" }}>{example.name}</div>
-                    <div style={{ fontSize: "0.9rem", color: theme.colors.textSecondary, marginBottom: "0.5rem" }}>
-                      {example.description}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.85rem",
-                        color: theme.colors.textSecondary,
-                        fontFamily: theme.fonts.monospace,
-                      }}
-                    >
-                      {example.url}
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {isLoading ? (
+                <LoadingAnimation message="Loading repository and parsing codebase views" />
+              ) : (
+                <button
+                  onClick={handleLoadRepo}
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.background,
+                    padding: "0.75rem 2rem",
+                    borderRadius: "6px",
+                    border: "none",
+                    cursor: "pointer",
+                    fontWeight: "500",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Load Repository
+                </button>
+              )}
             </div>
           </div>
         ) : (
@@ -426,36 +429,41 @@ export default function DemoPage() {
                     onClick={() => {
                       if (voiceStatus === "idle") {
                         setVoiceStatus("listening");
-                        // TODO: Start Agora voice capture
+                        startListening();
                       } else if (voiceStatus === "listening") {
-                        setVoiceStatus("processing");
-                        // TODO: Stop capture and process
+                        stopListening();
+                        // The useEffect will handle sending the message when transcript is ready
                       }
                     }}
-                    disabled={voiceStatus === "processing" || voiceStatus === "speaking"}
+                    disabled={voiceStatus === "processing" || voiceStatus === "speaking" || !isVoiceSupported}
                     style={{
                       width: "100%",
                       padding: "1rem",
                       borderRadius: "6px",
                       border: "none",
                       backgroundColor:
-                        voiceStatus === "listening"
+                        !isVoiceSupported
+                          ? "#6b7280"
+                          : voiceStatus === "listening"
                           ? "#ef4444"
                           : voiceStatus === "processing" || voiceStatus === "speaking"
                           ? "#6b7280"
                           : theme.colors.primary,
                       color: theme.colors.background,
                       cursor:
-                        voiceStatus === "processing" || voiceStatus === "speaking" ? "not-allowed" : "pointer",
+                        voiceStatus === "processing" || voiceStatus === "speaking" || !isVoiceSupported
+                          ? "not-allowed"
+                          : "pointer",
                       fontWeight: "600",
                       fontSize: "1rem",
-                      opacity: voiceStatus === "processing" || voiceStatus === "speaking" ? 0.6 : 1,
+                      opacity: voiceStatus === "processing" || voiceStatus === "speaking" || !isVoiceSupported ? 0.6 : 1,
                     }}
                   >
-                    {voiceStatus === "idle" && "🎤 Hold to Talk"}
-                    {voiceStatus === "listening" && "⏹️ Stop Recording"}
-                    {voiceStatus === "processing" && "⚙️ Processing..."}
-                    {voiceStatus === "speaking" && "🔊 Speaking..."}
+                    {!isVoiceSupported && "Voice Not Supported"}
+                    {isVoiceSupported && voiceStatus === "idle" && "Start Talking"}
+                    {isVoiceSupported && voiceStatus === "listening" && (interimTranscript ? `"${interimTranscript}..."` : "Listening...")}
+                    {voiceStatus === "processing" && "Processing..."}
+                    {voiceStatus === "speaking" && "Speaking..."}
                   </button>
                 </div>
               </div>
@@ -542,6 +550,50 @@ export default function DemoPage() {
                       </div>
                     ))
                   )}
+                </div>
+
+                {/* Text Input Area */}
+                <div style={{ display: "flex", gap: "0.75rem" }}>
+                  <input
+                    type="text"
+                    value={textInput}
+                    onChange={(e) => setTextInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey && !isSending) {
+                        e.preventDefault();
+                        handleSendMessage(textInput);
+                      }
+                    }}
+                    placeholder="Type a message (or use voice)..."
+                    disabled={isSending}
+                    style={{
+                      flex: 1,
+                      padding: "0.75rem 1rem",
+                      borderRadius: "6px",
+                      border: `1px solid ${theme.colors.border}`,
+                      backgroundColor: theme.colors.background,
+                      color: theme.colors.text,
+                      fontSize: "0.95rem",
+                      fontFamily: theme.fonts.body,
+                    }}
+                  />
+                  <button
+                    onClick={() => handleSendMessage(textInput)}
+                    disabled={isSending || !textInput.trim()}
+                    style={{
+                      padding: "0.75rem 1.5rem",
+                      borderRadius: "6px",
+                      border: "none",
+                      backgroundColor: isSending || !textInput.trim() ? "#6b7280" : theme.colors.primary,
+                      color: theme.colors.background,
+                      cursor: isSending || !textInput.trim() ? "not-allowed" : "pointer",
+                      fontWeight: "500",
+                      fontSize: "0.95rem",
+                      opacity: isSending || !textInput.trim() ? 0.6 : 1,
+                    }}
+                  >
+                    {isSending ? "Sending..." : "Send"}
+                  </button>
                 </div>
 
                 {/* Clear History Button */}

@@ -70,6 +70,8 @@ export default function IntegrationsPage() {
     <div
       style={{
         width: "100%",
+        minHeight: "100vh",
+        backgroundColor: theme.colors.background,
         color: theme.colors.text,
         fontFamily: theme.fonts.body,
       }}
