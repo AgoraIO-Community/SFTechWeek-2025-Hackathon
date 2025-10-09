@@ -5,7 +5,7 @@
  * and LLM services for the Principal AI platform.
  */
 
-export const version = "0.3.1";
+export const version = "0.3.3";
 
 // Adapters for GitHub integration
 export { GitHubFileSystemAdapter } from "./adapters/GitHubFileSystemAdapter";
@@ -35,3 +35,11 @@ export type {
   StructuredResponse,
   StreamingChunk
 } from "./types/StructuredResponse";
+
+// Diagram Generator
+export { DiagramGenerator } from "./services/DiagramGenerator";
+export type {
+  ExcalidrawElement,
+  ExcalidrawScene,
+  DiagramGenerationOptions
+} from "./services/DiagramGenerator";

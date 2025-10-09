@@ -13,7 +13,7 @@ import { LoadingAnimation } from "@/components/LoadingAnimation";
 import { AvatarSettingsModal } from "@/components/AvatarSettingsModal";
 import { ExcalidrawViewer, type ExcalidrawScene } from "@/components/ExcalidrawViewer";
 import { FileReferences } from "@/components/FileReferences";
-import { Settings, User, Clock, Radio, X, Mic, Cog, Volume2, Mic2, Square, Hand, MessageCircle, Folder, Bot, BarChart3 } from "lucide-react";
+import { Settings, User, Clock, Radio, X, Mic, Cog, Volume2, Mic2, Square, Hand, MessageCircle, Folder, Bot, BarChart3, CheckCircle } from "lucide-react";
 
 interface FileReference {
   path: string;
@@ -39,6 +39,7 @@ export default function DemoPage() {
   const [isRepoLoaded, setIsRepoLoaded] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId] = useState<string>(() => `session-${Date.now()}-${Math.random().toString(36).substring(7)}`);
+  const [coverageData, setCoverageData] = useState<any>(null);
 
   // Conversation state
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([]);
@@ -200,9 +201,12 @@ export default function DemoPage() {
   // Handle TTS completion - unmute and restart listening
   useEffect(() => {
     if (!actualIsSpeaking && voiceStatus === "speaking" && isDemoActive) {
-      unmuteMicrophone();
-      setVoiceStatus("listening");
-      startListening();
+      // Add delay to prevent catching tail end of speech
+      setTimeout(() => {
+        unmuteMicrophone();
+        setVoiceStatus("listening");
+        startListening();
+      }, 800); // 800ms delay to let audio fully finish
     } else if (!actualIsSpeaking && voiceStatus === "speaking") {
       unmuteMicrophone();
       setVoiceStatus("idle");
@@ -235,8 +239,35 @@ export default function DemoPage() {
   // Handle starting the demo
   const handleStartDemo = () => {
     setIsDemoActive(true);
-    setVoiceStatus("listening");
-    startListening();
+
+    // Extract repo name for greeting
+    const match = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+    const repoName = match ? match[2] : 'this';
+    const greeting = `Hello, I'm the Principal Engineer for the ${repoName} codebase. What can I help you with?`;
+
+    // Add greeting to conversation
+    const greetingMessage: ConversationMessage = {
+      role: "assistant",
+      content: greeting,
+      timestamp: new Date(),
+    };
+    setConversationHistory([greetingMessage]);
+
+    // Speak the greeting
+    if (useAvatar) {
+      avatarSpeak(greeting);
+      setVoiceStatus("speaking");
+    } else if (useElevenLabs) {
+      startStreaming();
+      sendTextChunk(greeting);
+      endStreaming();
+      setVoiceStatus("speaking");
+    } else {
+      speak(greeting);
+      setVoiceStatus("speaking");
+    }
+
+    // Start listening after greeting (will happen when TTS completes via useEffect)
   };
 
   // Handle stopping the demo
@@ -247,10 +278,10 @@ export default function DemoPage() {
     stopActualSpeaking();
   };
 
-  const handleLoadRepo = async (): Promise<void> => {
+  const handleLoadRepo = async (repoUrl: string): Promise<void> => {
     setIsLoading(true);
     setError(null);
-    setRepoUrl(SUPPORTED_REPO);
+    setRepoUrl(repoUrl);
 
     try {
       const response = await fetch("/api/load-repo", {
@@ -258,7 +289,7 @@ export default function DemoPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sessionId }),
+        body: JSON.stringify({ sessionId, repoUrl }),
       });
 
       const data = await response.json();
@@ -268,6 +299,7 @@ export default function DemoPage() {
       }
 
       console.log("Repository loaded:", data);
+      setCoverageData(data.metadata?.coverage || null);
       setIsRepoLoaded(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to load repository";
@@ -278,8 +310,19 @@ export default function DemoPage() {
     }
   };
 
-  // Currently supported repository
-  const SUPPORTED_REPO = "https://github.com/a24z-ai/core-library";
+  // Supported repositories
+  const SUPPORTED_REPOS = [
+    {
+      url: "https://github.com/a24z-ai/core-library",
+      name: "a24z-ai/core-library",
+      description: "Core library with Alexandria documentation including structured codebase views and guidance.",
+    },
+    {
+      url: "https://github.com/a24z-ai/alexandria-cli",
+      name: "a24z-ai/alexandria-cli",
+      description: "Command-line interface for Alexandria documentation system with interactive codebase exploration.",
+    },
+  ];
 
   const handleSendMessage = async (message: string): Promise<void> => {
     if (!message.trim() || isSending) return;
@@ -554,6 +597,37 @@ export default function DemoPage() {
 
             return (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
+                {coverageData && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "6px",
+                      backgroundColor: theme.colors.backgroundSecondary,
+                      border: `1px solid ${theme.colors.border}`,
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: theme.colors.textSecondary }}>
+                      <CheckCircle size={16} style={{ color: "#10b981" }} />
+                      <span style={{ fontWeight: "600" }}>Coverage:</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span style={{
+                        fontWeight: "700",
+                        fontSize: "1rem",
+                        color: coverageData.coveragePercentage > 50 ? "#10b981" : coverageData.coveragePercentage > 20 ? "#f59e0b" : "#ef4444"
+                      }}>
+                        {coverageData.coveragePercentage.toFixed(1)}%
+                      </span>
+                      <span style={{ color: theme.colors.textSecondary }}>
+                        ({coverageData.coveredFiles}/{coverageData.totalFiles} files)
+                      </span>
+                    </div>
+                  </div>
+                )}
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   <button
                     onClick={() => setEnableAvatar(!enableAvatar)}
@@ -624,61 +698,63 @@ export default function DemoPage() {
             )}
 
             {isLoading ? (
-              <LoadingAnimation message="Loading repository and parsing codebase views" />
+              <LoadingAnimation message="Loading repository and calculating coverage..." />
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
-                {/* Repository Card */}
-                <div
-                  onClick={handleLoadRepo}
-                  style={{
-                    backgroundColor: theme.colors.backgroundSecondary,
-                    padding: "1.5rem",
-                    borderRadius: "8px",
-                    border: `1px solid ${theme.colors.border}`,
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-4px)";
-                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
-                    e.currentTarget.style.borderColor = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.borderColor = theme.colors.border;
-                  }}
-                >
-                  <h3
-                    style={{
-                      fontSize: "1.25rem",
-                      fontWeight: "600",
-                      marginBottom: "0.75rem",
-                      color: theme.colors.text,
-                    }}
-                  >
-                    a24z-ai/core-library
-                  </h3>
-                  <p style={{ marginBottom: "0.75rem", color: theme.colors.textSecondary, fontSize: "0.95rem" }}>
-                    Core library with Alexandria documentation including structured codebase views and guidance.
-                  </p>
+                {SUPPORTED_REPOS.map((repo) => (
                   <div
+                    key={repo.url}
+                    onClick={() => handleLoadRepo(repo.url)}
                     style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      padding: "0.25rem 0.75rem",
-                      borderRadius: "4px",
-                      backgroundColor: "rgba(16, 185, 129, 0.1)",
-                      border: "1px solid #10b981",
-                      fontSize: "0.85rem",
-                      color: "#10b981",
-                      fontFamily: theme.fonts.monospace,
+                      backgroundColor: theme.colors.backgroundSecondary,
+                      padding: "1.5rem",
+                      borderRadius: "8px",
+                      border: `1px solid ${theme.colors.border}`,
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-4px)";
+                      e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
+                      e.currentTarget.style.borderColor = theme.colors.primary;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.borderColor = theme.colors.border;
                     }}
                   >
-                    .alexandria/
+                    <h3
+                      style={{
+                        fontSize: "1.25rem",
+                        fontWeight: "600",
+                        marginBottom: "0.75rem",
+                        color: theme.colors.text,
+                      }}
+                    >
+                      {repo.name}
+                    </h3>
+                    <p style={{ marginBottom: "0.75rem", color: theme.colors.textSecondary, fontSize: "0.95rem" }}>
+                      {repo.description}
+                    </p>
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        padding: "0.25rem 0.75rem",
+                        borderRadius: "4px",
+                        backgroundColor: "rgba(16, 185, 129, 0.1)",
+                        border: "1px solid #10b981",
+                        fontSize: "0.85rem",
+                        color: "#10b981",
+                        fontFamily: theme.fonts.monospace,
+                      }}
+                    >
+                      .alexandria/
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             )}
           </div>
@@ -1179,8 +1255,8 @@ export default function DemoPage() {
               </div>
             </div>
 
-            {/* Diagram Panel - Only show when diagram is available */}
-            {currentDiagram && (
+            {/* Diagram Panel - Disabled for now */}
+            {false && currentDiagram && (
               <div
                 style={{
                   backgroundColor: theme.colors.backgroundSecondary,
@@ -1203,8 +1279,8 @@ export default function DemoPage() {
                 </h3>
 
                 <ExcalidrawViewer
-                  diagram={currentDiagram}
-                  theme="light"
+                  diagram={currentDiagram!}
+                  theme="dark"
                   height="600px"
                 />
 

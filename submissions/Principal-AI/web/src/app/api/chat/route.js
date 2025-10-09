@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GitHubFileSystemAdapter, LLMService, ResponseParser } from "@principal-ade/ai-brain";
+import { GitHubFileSystemAdapter, LLMService, ResponseParser, DiagramGenerator } from "@principal-ade/ai-brain";
 import { MemoryPalace } from "@a24z/core-library";
 import { palaceCache, adapterCache } from "@/lib/cache";
 
@@ -61,8 +61,9 @@ export async function POST(request) {
       console.log(`Using cached MemoryPalace for session ${sessionId}`);
     }
 
-    // Initialize LLM service
+    // Initialize LLM service and diagram generator
     const llmService = new LLMService({ apiKey: groqApiKey });
+    const diagramGenerator = new DiagramGenerator(groqApiKey);
 
     // Generate streaming response using v0.3.1 view-aware method
     console.log(`Generating view-aware response for: "${message}"`);
@@ -96,7 +97,7 @@ export async function POST(request) {
             }
           }) + '\n'));
 
-          // Accumulate text for file reference extraction
+          // Accumulate text for file reference extraction and diagram generation
           let accumulatedText = '';
           let lastExtractedLength = 0;
 
@@ -125,6 +126,24 @@ export async function POST(request) {
 
               lastExtractedLength = accumulatedText.length;
             }
+          }
+
+          // Generate diagram from FULL response (after streaming completes)
+          console.log(`🎨 Attempting diagram generation with full response (${accumulatedText.length} characters)...`);
+          try {
+            const diagram = await diagramGenerator.generateDiagramFromStream(accumulatedText);
+            if (diagram) {
+              console.log('📊 Generated diagram with', diagram.elements.length, 'elements');
+              controller.enqueue(encoder.encode(JSON.stringify({
+                type: 'diagram',
+                data: diagram
+              }) + '\n'));
+            } else {
+              console.log('❌ Diagram generation returned null (LLM decided diagram not needed)');
+            }
+          } catch (err) {
+            console.error('❌ Diagram generation error:', err);
+            // Don't fail the whole request if diagram generation fails
           }
 
           // Final file reference extraction

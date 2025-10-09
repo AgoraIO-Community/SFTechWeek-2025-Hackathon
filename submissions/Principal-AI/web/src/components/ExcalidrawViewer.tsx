@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import "@excalidraw/excalidraw/index.css";
 
 /**
  * ExcalidrawScene interface matching the output from DiagramGenerator
@@ -99,12 +100,12 @@ export const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({
           elements: diagram.elements,
           appState: {
             ...diagram.appState,
-            viewBackgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+            viewBackgroundColor: theme === "dark" ? "#1e1e1e" : "#ffffff",
           },
           files: diagram.files || {},
         }}
         viewModeEnabled={true} // Read-only mode
-        theme={theme}
+        theme="dark"
         UIOptions={{
           canvasActions: {
             saveAsImage: true,

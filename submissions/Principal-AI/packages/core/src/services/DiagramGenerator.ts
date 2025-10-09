@@ -61,6 +61,22 @@ export interface DiagramGenerationOptions {
   maxTokens?: number;
 }
 
+/**
+ * Color palette optimized for dark backgrounds
+ */
+const DARK_THEME_COLORS = {
+  stroke: "#e2e8f0", // Light slate for borders
+  text: "#f1f5f9", // Very light slate for text
+  backgrounds: [
+    "#1e3a8a", // Dark blue
+    "#831843", // Dark pink
+    "#14532d", // Dark green
+    "#854d0e", // Dark yellow
+    "#3730a3", // Dark indigo
+  ],
+  arrow: "#94a3b8", // Light slate for arrows
+};
+
 export class DiagramGenerator {
   private groq: Groq;
   private model: string;
@@ -68,6 +84,36 @@ export class DiagramGenerator {
   constructor(apiKey: string, model = "llama-3.3-70b-versatile") {
     this.groq = new Groq({ apiKey });
     this.model = model;
+  }
+
+  /**
+   * Normalize element colors to work well on dark backgrounds
+   */
+  private normalizeColors(elements: ExcalidrawElement[]): ExcalidrawElement[] {
+    return elements.map((el, index) => {
+      const normalized: ExcalidrawElement = { ...el };
+
+      // Normalize stroke colors (borders, lines)
+      if (el.type === "arrow" || el.type === "line") {
+        normalized.strokeColor = DARK_THEME_COLORS.arrow;
+      } else {
+        normalized.strokeColor = DARK_THEME_COLORS.stroke;
+      }
+
+      // Normalize text colors
+      if (el.type === "text") {
+        normalized.strokeColor = DARK_THEME_COLORS.text;
+      }
+
+      // Normalize background colors for shapes
+      if (el.type === "rectangle" || el.type === "ellipse" || el.type === "diamond") {
+        // Cycle through background colors
+        const bgIndex = index % DARK_THEME_COLORS.backgrounds.length;
+        normalized.backgroundColor = DARK_THEME_COLORS.backgrounds[bgIndex];
+      }
+
+      return normalized;
+    });
   }
 
   /**
@@ -162,7 +208,7 @@ Add appropriate styling: strokeColor, backgroundColor, fontSize, etc.`;
     const result = JSON.parse(response.choices[0]?.message?.content || "{}");
 
     // Ensure all elements have required IDs
-    const elements = (result.elements || []).map((el: ExcalidrawElement, index: number) => ({
+    let elements = (result.elements || []).map((el: ExcalidrawElement, index: number) => ({
       ...el,
       id: el.id || `element-${Date.now()}-${index}`,
       seed: el.seed || Math.floor(Math.random() * 2147483647),
@@ -171,6 +217,9 @@ Add appropriate styling: strokeColor, backgroundColor, fontSize, etc.`;
       isDeleted: false,
       updated: Date.now(),
     }));
+
+    // Normalize colors for dark theme visibility
+    elements = this.normalizeColors(elements);
 
     return {
       type: "excalidraw",
