@@ -4,8 +4,10 @@ import "./app.css";
 import "@appwrite.io/pink-icons";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "@a24z/industry-theme";
+import { Book, Github } from "lucide-react";
 import { client } from "@/lib/appwrite";
 import { AppwriteException } from "appwrite";
+import Image from "next/image";
 
 interface LogEntry {
   date: Date;
@@ -95,13 +97,13 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center p-5"
+      className="flex flex-col items-center"
       style={{
-        marginBottom: `${detailHeight}px`,
         backgroundColor: theme.colors.background,
         minHeight: "100vh",
         color: theme.colors.text,
         fontFamily: theme.fonts.body,
+        padding: "1.25rem",
       }}
     >
       {/* Hidden ping section - keeping functionality for testing */}
@@ -151,16 +153,10 @@ export default function Home() {
           Principal AI
         </h1>
         <p
-          className="text-2xl mb-4"
+          className="text-2xl mb-12"
           style={{ color: theme.colors.textSecondary }}
         >
           Voice-powered AI Principal Engineer for your codebase
-        </p>
-        <p
-          className="text-lg mb-12"
-          style={{ color: theme.colors.textSecondary, opacity: 0.8 }}
-        >
-          Have natural conversations with an AI that understands your repository structure and codebase context
         </p>
 
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -181,28 +177,7 @@ export default function Home() {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              Launch Demo
-            </button>
-          </a>
-
-          <a href="/integrations" style={{ textDecoration: "none" }}>
-            <button
-              className="px-8 py-4 rounded-lg text-lg font-medium transition-all cursor-pointer"
-              style={{
-                backgroundColor: theme.colors.backgroundSecondary,
-                color: theme.colors.text,
-                border: `2px solid ${theme.colors.border}`,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = theme.colors.primary;
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = theme.colors.border;
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              View Integrations
+              Explore
             </button>
           </a>
         </div>
@@ -216,180 +191,169 @@ export default function Home() {
         >
           Powered by Leading AI Technologies
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
-          {[
-            { title: "Agora Voice", desc: "Real-time voice I/O and speech-to-text with WebRTC" },
-            { title: "Alexandria", desc: "Structured codebase context from .alexandria/ documentation" },
-            { title: "Groq LLM", desc: "Ultra-fast inference with llama-3.1-8b-instant for real-time responses" },
-            { title: "ElevenLabs TTS", desc: "Natural voice synthesis for professional-quality audio" },
-            { title: "HeyGen Avatar", desc: "Photorealistic AI avatar with lip-sync and streaming video" },
-          ].map((feature) => (
-            <div
-              key={feature.title}
-              style={{
-                padding: "1.5rem",
-                borderRadius: "8px",
-                border: `1px solid ${theme.colors.border}`,
-                backgroundColor: theme.colors.backgroundSecondary,
-              }}
-            >
-              <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "0.5rem", color: theme.colors.text }}>
-                {feature.title}
-              </h3>
-              <p style={{ color: theme.colors.textSecondary, fontSize: "0.95rem" }}>{feature.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <aside
-        className="fixed bottom-0 flex w-full cursor-pointer"
-        style={{
-          borderTop: `1px solid ${theme.colors.border}`,
-          backgroundColor: theme.colors.backgroundSecondary,
-        }}
-      >
-        <details open={showLogs} ref={detailsRef} className={"w-full"}>
-          <summary
-            className="flex w-full flex-row justify-between p-4 marker:content-none"
-            style={{ color: theme.colors.text }}
-          >
-            <div className="flex gap-2">
-              <span className="font-semibold">Logs</span>
-              {logs.length > 0 && (
-                <div
-                  className="flex items-center rounded-md px-2"
-                  style={{
-                    backgroundColor: theme.colors.background,
-                    color: theme.colors.text,
-                  }}
-                >
-                  <span className="font-semibold">{logs.length}</span>
-                </div>
-              )}
-            </div>
-            <div className="icon">
-              <span className="icon-cheveron-down" aria-hidden="true"></span>
-            </div>
-          </summary>
-          <div className="flex w-full flex-col lg:flex-row">
-            <div
-              className="flex flex-col"
-              style={{ borderRight: `1px solid ${theme.colors.border}` }}
+        <div>
+          {/* Agora - centered single item */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+            <a
+              href="https://www.agora.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", minWidth: "250px", maxWidth: "350px", flex: "1 1 250px" }}
             >
               <div
-                className="px-4 py-2"
+                className="transition-all cursor-pointer"
                 style={{
-                  borderTop: `1px solid ${theme.colors.border}`,
-                  borderBottom: `1px solid ${theme.colors.border}`,
-                  backgroundColor: theme.colors.background,
-                  color: theme.colors.textSecondary,
+                  padding: "1.5rem",
+                  borderRadius: "8px",
+                  border: `1px solid ${theme.colors.border}`,
+                  backgroundColor: theme.colors.backgroundSecondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                  e.currentTarget.style.boxShadow = `0 8px 16px rgba(0, 0, 0, 0.2)`;
+                  e.currentTarget.style.borderColor = theme.colors.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.borderColor = theme.colors.border;
                 }}
               >
-                Project
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+                  <div style={{ color: theme.colors.primary, display: "flex", alignItems: "center" }}>
+                    <Image src="/agora.png" alt="Agora" width={80} height={32} style={{ objectFit: "contain" }} />
+                  </div>
+                </div>
+                <p style={{ color: theme.colors.textSecondary, fontSize: "0.95rem", textAlign: "center" }}>Real-time voice I/O and speech-to-text with WebRTC</p>
               </div>
-              <div className="grid grid-cols-2 gap-4 p-4">
-                <div className="flex flex-col">
-                  <span style={{ color: theme.colors.textSecondary }}>Endpoint</span>
-                  <span className="truncate" style={{ color: theme.colors.text }}>
-                    {process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span style={{ color: theme.colors.textSecondary }}>Project-ID</span>
-                  <span className="truncate" style={{ color: theme.colors.text }}>
-                    {process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span style={{ color: theme.colors.textSecondary }}>Project name</span>
-                  <span className="truncate" style={{ color: theme.colors.text }}>
-                    {process.env.NEXT_PUBLIC_APPWRITE_PROJECT_NAME}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex-grow">
-              <table className="w-full">
-                <thead>
-                  <tr
-                    style={{
-                      borderTop: `1px solid ${theme.colors.border}`,
-                      borderBottom: `1px solid ${theme.colors.border}`,
-                      backgroundColor: theme.colors.background,
-                      color: theme.colors.textSecondary,
-                    }}
-                  >
-                    {logs.length > 0 ? (
-                      <>
-                        <td className="w-52 py-2 pl-4">Date</td>
-                        <td>Status</td>
-                        <td>Method</td>
-                        <td className="hidden lg:table-cell">Path</td>
-                        <td className="hidden lg:table-cell">Response</td>
-                      </>
-                    ) : (
-                      <>
-                        <td className="py-2 pl-4">Logs</td>
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {logs.length > 0 ? (
-                    logs.map((log, index) => (
-                      <tr key={`log-${index}-${log.date.getTime()}`} style={{ color: theme.colors.text }}>
-                        <td className="py-2 pl-4" style={{ fontFamily: theme.fonts.monospace }}>
-                          {log.date.toLocaleString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </td>
-                        <td>
-                          {log.status > 400 ? (
-                            <div
-                              className="w-fit rounded-sm px-1"
-                              style={{
-                                backgroundColor: "rgba(239, 68, 68, 0.2)",
-                                color: "#ef4444",
-                              }}
-                            >
-                              {log.status}
-                            </div>
-                          ) : (
-                            <div
-                              className="w-fit rounded-sm px-1"
-                              style={{
-                                backgroundColor: "rgba(16, 185, 129, 0.2)",
-                                color: "#10b981",
-                              }}
-                            >
-                              {log.status}
-                            </div>
-                          )}
-                        </td>
-                        <td>{log.method}</td>
-                        <td className="hidden lg:table-cell">{log.path}</td>
-                        <td className="hidden lg:table-cell" style={{ fontFamily: theme.fonts.monospace }}>
-                          {log.response}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr key="no-logs">
-                      <td className="py-2 pl-4" style={{ fontFamily: theme.fonts.monospace, color: theme.colors.text }}>
-                        There are no logs to show
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            </a>
           </div>
-        </details>
-      </aside>
+
+          {/* First row - 3 items */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem", marginBottom: "1.5rem" }}>
+            {[
+              {
+                title: "Appwrite",
+                desc: "Cloud database and session management for conversation state",
+                icon: <Image src="/appwrite.svg" alt="Appwrite" width={24} height={24} style={{ objectFit: "contain" }} />,
+                logoOnly: false,
+                url: "https://appwrite.io"
+              },
+              {
+                title: "Alexandria CLI",
+                desc: "Structured codebase context from .alexandria/ documentation",
+                icon: <Book size={24} />,
+                logoOnly: false,
+                url: "https://github.com/yourusername/alexandria-cli"
+              },
+              {
+                title: "LLM",
+                desc: "Ultra-fast inference with llama-3.1-8b-instant for real-time responses",
+                icon: <Image src="/groq.png" alt="Groq" width={24} height={24} style={{ objectFit: "contain" }} />,
+                logoOnly: false,
+                url: "https://groq.com"
+              },
+            ].map((feature) => (
+              <a
+                key={feature.title}
+                href={feature.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <div
+                  className="transition-all cursor-pointer"
+                  style={{
+                    padding: "1.5rem",
+                    borderRadius: "8px",
+                    border: `1px solid ${theme.colors.border}`,
+                    backgroundColor: theme.colors.backgroundSecondary,
+                    height: "100%",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = `0 8px 16px rgba(0, 0, 0, 0.2)`;
+                    e.currentTarget.style.borderColor = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.borderColor = theme.colors.border;
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+                    {feature.icon && <div style={{ color: theme.colors.primary, display: "flex", alignItems: "center" }}>{feature.icon}</div>}
+                    {!feature.logoOnly && (
+                      <h3 style={{ fontSize: "1.25rem", fontWeight: "600", margin: "0", color: theme.colors.text }}>
+                        {feature.title}
+                      </h3>
+                    )}
+                  </div>
+                  <p style={{ color: theme.colors.textSecondary, fontSize: "0.95rem", textAlign: "center" }}>{feature.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* Second row - 2 items centered */}
+          <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+            {[
+              {
+                title: "ElevenLabs TTS",
+                desc: "Natural voice synthesis for professional-quality audio",
+                icon: <Image src="/elevenlabs.svg" alt="ElevenLabs" width={120} height={30} style={{ objectFit: "contain", paddingTop: "0.3rem", paddingBottom: "0.5rem" }} />,
+                logoOnly: true,
+                url: "https://elevenlabs.io"
+              },
+              {
+                title: "HeyGen Avatar",
+                desc: "Photorealistic AI avatar with lip-sync and streaming video",
+                icon: <Image src="/heygen.png" alt="HeyGen" width={24} height={24} style={{ objectFit: "contain" }} />,
+                logoOnly: false,
+                url: "https://heygen.com"
+              },
+            ].map((feature) => (
+              <a
+                key={feature.title}
+                href={feature.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", minWidth: "250px", maxWidth: "350px", flex: "1 1 250px" }}
+              >
+                <div
+                  className="transition-all cursor-pointer"
+                  style={{
+                    padding: "1.5rem",
+                    borderRadius: "8px",
+                    border: `1px solid ${theme.colors.border}`,
+                    backgroundColor: theme.colors.backgroundSecondary,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = `0 8px 16px rgba(0, 0, 0, 0.2)`;
+                    e.currentTarget.style.borderColor = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.borderColor = theme.colors.border;
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+                    {feature.icon && <div style={{ color: theme.colors.primary, display: "flex", alignItems: "center" }}>{feature.icon}</div>}
+                    {!feature.logoOnly && (
+                      <h3 style={{ fontSize: "1.25rem", fontWeight: "600", margin: "0", color: theme.colors.text }}>
+                        {feature.title}
+                      </h3>
+                    )}
+                  </div>
+                  <p style={{ color: theme.colors.textSecondary, fontSize: "0.95rem", textAlign: "center" }}>{feature.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

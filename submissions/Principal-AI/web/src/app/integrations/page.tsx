@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@a24z/industry-theme";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { ThemedSlidePresentationBook } from "@/components/ThemedSlidePresentationBook";
 import { parseMarkdownIntoPresentation } from "themed-markdown";
 
@@ -77,28 +78,31 @@ export default function IntegrationsPage() {
       }}
     >
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem", minHeight: "100vh" }}>
-        <Link
-          href="/"
-          style={{
-            color: theme.colors.primary,
-            textDecoration: "none",
-            marginBottom: "2rem",
-            display: "inline-block",
-          }}
-        >
-          ← Back to Home
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
+          <Link
+            href="/"
+            style={{
+              color: theme.colors.primary,
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Logo width={100} height={100} theme={theme} />
+          </Link>
 
-        <h1
-          style={{
-            fontSize: "2.5rem",
-            fontWeight: "300",
-            marginBottom: "1rem",
-            color: theme.colors.text,
-          }}
-        >
-          Integrations & Testing
-        </h1>
+          <h1
+            style={{
+              fontSize: "2.5rem",
+              fontWeight: "300",
+              margin: "0",
+              color: theme.colors.text,
+              lineHeight: "1",
+            }}
+          >
+            Integrations & Testing
+          </h1>
+        </div>
 
         <p
           style={{

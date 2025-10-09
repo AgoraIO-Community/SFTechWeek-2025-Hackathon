@@ -13,8 +13,9 @@
   "dependencies": {
     "@a24z/industry-theme": "^0.1.2",
     "@appwrite.io/pink-icons": "^1.0.0",
+    "@excalidraw/excalidraw": "^0.18.0",
     "@heygen/streaming-avatar": "^2.1.0",
-    "@principal-ade/ai-brain": "^0.2.0",
+    "@principal-ade/ai-brain": "^0.3.1",
     "@tailwindcss/postcss": "^4.1.11",
     "agora-rtc-sdk-ng": "^4.24.0",
     "appwrite": "^18.1.1",

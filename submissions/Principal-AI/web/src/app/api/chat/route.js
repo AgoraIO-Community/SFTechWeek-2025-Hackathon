@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GitHubFileSystemAdapter, LLMService } from "@principal-ade/ai-brain";
+import { GitHubFileSystemAdapter, LLMService, ResponseParser } from "@principal-ade/ai-brain";
 import { MemoryPalace } from "@a24z/core-library";
 import { palaceCache, adapterCache } from "@/lib/cache";
 
@@ -64,26 +64,93 @@ export async function POST(request) {
     // Initialize LLM service
     const llmService = new LLMService({ apiKey: groqApiKey });
 
-    // Generate response with conversation history
-    console.log(`Generating response for: "${message}"`);
+    // Generate streaming response using v0.3.1 view-aware method
+    console.log(`Generating view-aware response for: "${message}"`);
     console.log(`Conversation history length: ${conversationHistory.length}`);
 
-    const response = await llmService.generateConversationResponse(
-      palace,
-      message,
-      conversationHistory,
-      {
-        stream: false,
-      }
-    );
+    // Create a ReadableStream for the response
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          // Use the NEW view-aware streaming method from v0.3.1
+          const { response, intent } = await llmService.generateViewAwareResponse(
+            palace,
+            fsAdapter, // ← Required parameter in v0.3.1
+            message,
+            conversationHistory,
+            {
+              temperature: 0.7,
+              maxTokens: 2000,
+              stream: true, // Enable streaming
+            }
+          );
 
-    return NextResponse.json({
-      status: "success",
-      response,
-      metadata: {
-        repository: `${owner}/${repo}`,
-        views: palace.listViews().length,
-        conversationLength: conversationHistory.length + 1,
+          // Send intent information first (optional metadata)
+          controller.enqueue(encoder.encode(JSON.stringify({
+            metadata: {
+              type: intent.type,
+              relevantViews: intent.relevantViews,
+              filesLoaded: intent.relevantFiles?.length || 0,
+              version: 'v0.3.1'
+            }
+          }) + '\n'));
+
+          // Accumulate text for file reference extraction
+          let accumulatedText = '';
+          let lastExtractedLength = 0;
+
+          // Stream each chunk to the client
+          for await (const chunk of response) {
+            accumulatedText += chunk;
+
+            // Send the content chunk
+            const data = JSON.stringify({ content: chunk }) + '\n';
+            controller.enqueue(encoder.encode(data));
+
+            // Periodically extract file references (every ~200 chars)
+            if (accumulatedText.length - lastExtractedLength > 200) {
+              const previousText = accumulatedText.substring(0, lastExtractedLength);
+              const newFileRefs = ResponseParser.extractFileReferencesIncremental(
+                previousText,
+                accumulatedText
+              );
+
+              if (newFileRefs.length > 0) {
+                controller.enqueue(encoder.encode(JSON.stringify({
+                  type: 'file_references',
+                  references: newFileRefs
+                }) + '\n'));
+              }
+
+              lastExtractedLength = accumulatedText.length;
+            }
+          }
+
+          // Final file reference extraction
+          const allFileRefs = ResponseParser.extractFileReferences(accumulatedText);
+          if (allFileRefs.length > 0) {
+            controller.enqueue(encoder.encode(JSON.stringify({
+              type: 'file_references_final',
+              references: allFileRefs
+            }) + '\n'));
+          }
+
+          // Send completion signal
+          controller.enqueue(encoder.encode(JSON.stringify({ done: true }) + '\n'));
+          controller.close();
+        } catch (error) {
+          console.error("Streaming error:", error);
+          controller.error(error);
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
       },
     });
   } catch (error) {
