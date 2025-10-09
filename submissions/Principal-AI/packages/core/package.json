@@ -1,7 +1,7 @@
 {
   "name": "@principal-ade/ai-brain",
-  "version": "0.2.0",
-  "description": "Core library for Principal AI - GitHub parsing and LLM services",
+  "version": "0.3.0",
+  "description": "Core library for Principal AI - GitHub parsing and LLM services with view-aware context",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AgoraIO-Community/SFTechWeek-2025-Hackathon.git",

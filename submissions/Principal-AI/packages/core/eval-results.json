@@ -1,0 +1,484 @@
+{
+  "totalQuestions": 10,
+  "passedQuestions": 7,
+  "failedQuestions": 3,
+  "averageScore": 71.5,
+  "intentAccuracy": 70,
+  "results": [
+    {
+      "question": {
+        "id": "overview-1",
+        "category": "Overview",
+        "question": "What is this codebase about?",
+        "expectedIntent": "overview",
+        "successCriteria": {
+          "mustInclude": [
+            "memory",
+            "palace",
+            "codebase"
+          ],
+          "minLength": 50,
+          "maxLength": 300,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "overview",
+        "confidence": 0.7,
+        "relevantViews": [
+          "ai-agent-instructions",
+          "alexandria-core-library-adapter-architecture",
+          "alexandriaoutpostmanager-guide"
+        ],
+        "needsFileContent": false,
+        "keywords": [
+          "Code",
+          "codebase"
+        ],
+        "relevantFiles": []
+      },
+      "response": "**Overview of the Codebase**\n\nThis codebase appears to be a decentralized, distributed system for managing and storing data across multiple nodes. It's designed to provide a scalable and fault-tolerant architecture for handling large volumes of data.\n\n**Key Components**\n\nThe codebase consists of several key components:\n\n1. **Alexandria Core Library**: This is the core library that provides the foundation for the system's functionality. It includes abstractions and interfaces for working with data.\n2. **Node Adapters**: These adapters enable the system to interact with different storage systems, such as file systems, databases, or in-memory storage.\n3. **Outpost Managers**: These managers are responsible for coordinating the interaction between nodes and the data storage systems.\n\n**Design Philosophy**\n\nThe system is designed with a focus on scalability, reliability, and flexibility. It's built to handle a large number of nodes and storage systems, and it provides a modular architecture that allows for easy extension and customization.\n\n**Relationships between Codebase Views**\n\nThe codebase views, as mentioned in the documentation, provide a high-level overview of the system's architecture and components. The relationships between these views are as follows:\n\n* The **Alexandria Core Library Adapter Architecture** view provides an overview of how the core library interacts with node adapters.\n* The **AlexandriaOutpostManager Guide** view explains how the outpost managers coordinate the interaction between nodes and data storage systems.\n* The **AI Agent Instructions** view is likely related to the system's ability to work with AI models and provide instructions for data processing.\n\nOverall, this codebase is designed to provide a robust and scalable infrastructure for managing and storing data in a distributed system.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 264,
+        "includesRequired": false,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": true,
+        "overallScore": 75
+      },
+      "issues": [
+        "Missing required keywords: palace"
+      ]
+    },
+    {
+      "question": {
+        "id": "overview-2",
+        "category": "Overview",
+        "question": "Explain the architecture of this project",
+        "expectedIntent": "overview",
+        "successCriteria": {
+          "mustInclude": [
+            "architecture"
+          ],
+          "minLength": 50,
+          "maxLength": 300,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "overview",
+        "confidence": 0.7,
+        "relevantViews": [
+          "path-management-architecture",
+          "task-system-architecture",
+          "excalidraw-drawing-support"
+        ],
+        "needsFileContent": false,
+        "keywords": [
+          "Architecture"
+        ],
+        "relevantFiles": []
+      },
+      "response": "**Architecture Overview**\n\nThe project's architecture is designed to be modular, scalable, and fault-tolerant. It consists of several key components that work together to provide a robust and flexible system.\n\n**Key Components**\n\n1. **Memory Palace**: This is the core component of the system, responsible for managing data and providing a centralized interface for interacting with the system.\n2. **FileSystemAdapter**: This adapter provides an abstraction layer for interacting with different file systems, allowing the system to be flexible and adaptable to various storage systems.\n3. **Alexandria Paths**: This module provides a set of branded types and utilities for working with paths and file systems.\n4. **Task System**: This component is responsible for managing work requests and queues, allowing the system to handle concurrent tasks and operations.\n\n**Abstraction Layers**\n\nThe project uses several abstraction layers to provide flexibility and modularity:\n\n1. **FileSystemAdapter**: This adapter provides an abstraction layer for interacting with different file systems.\n2. **Alexandria Paths**: This module provides a set of branded types and utilities for working with paths and file systems.\n3. **Task Store**: This store provides a centralized interface for managing task queues and work requests.\n\n**Modular Design**\n\nThe project's architecture is designed to be modular, with each component and module responsible for a specific function. This allows for easy extension and customization of the system.\n\n**Relationships between Components**\n\nThe relationships between components are as follows:\n\n* The **Memory Palace** interacts with the **FileSystemAdapter** to manage data and provide a centralized interface.\n* The **FileSystemAdapter** provides an abstraction layer for interacting with different file systems.\n* The **Alexandria Paths** module provides a set of branded types and utilities for working with paths and file systems.\n* The **Task System** interacts with the **Task Store** to manage task queues and work requests.\n\n**Architecture Diagram**\n\nHere is a high-level architecture diagram:\n```\n          +---------------+\n          |  Memory Palace  |\n          +---------------+\n                  |\n                  |\n                  v\n+---------------+---------------+\n|  FileSystem    |  Alexandria   |\n|  Adapter       |  Paths        |\n+---------------+---------------+\n                  |\n                  |\n                  v\n+---------------+---------------+\n|  Task System  |  Task Store    |\n+---------------+---------------+\n```\nThis diagram illustrates the relationships between the key components and abstraction layers in the project's architecture.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 351,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": true,
+        "overallScore": 85
+      },
+      "issues": [
+        "Response too long for voice: 351 words (max: 300)"
+      ]
+    },
+    {
+      "question": {
+        "id": "implementation-1",
+        "category": "Implementation",
+        "question": "How does the MemoryPalace class work?",
+        "expectedIntent": "implementation",
+        "successCriteria": {
+          "mustInclude": [
+            "MemoryPalace"
+          ],
+          "minLength": 100,
+          "shouldReferenceFiles": true,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "implementation",
+        "confidence": 0.9,
+        "relevantViews": [
+          "memorypalace-guide",
+          "task-system-architecture",
+          "excalidraw-drawing-support"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "MemoryPalace",
+          "memory",
+          "palace"
+        ],
+        "relevantFiles": [
+          "src/MemoryPalace.ts",
+          "src/pure-core/types/index.ts",
+          "src/pure-core/types/task.ts",
+          "src/pure-core/stores/TaskStore.ts",
+          "src/pure-core/stores/DrawingStore.ts"
+        ]
+      },
+      "response": "**MemoryPalace Class Overview**\n\nThe MemoryPalace class is a central component of the project, responsible for managing data and providing a centralized interface for interacting with the system. It is designed to be a robust and flexible solution for storing and retrieving data.\n\n**Class Structure**\n\nThe MemoryPalace class consists of several key properties and methods:\n\n1. **_data**: This is the internal data storage, which can be a file system, database, or other storage solution.\n2. **_taskStore**: This is the task store component, responsible for managing task queues and work requests.\n3. **_fileSystemAdapter**: This is the file system adapter component, providing an abstraction layer for interacting with different file systems.\n\n**Key Methods**\n\n1. **init()**: Initializes the MemoryPalace instance, setting up the internal data storage and task store.\n2. **save(data)`: Saves data to the internal data storage.\n3. `load(dataId)`: Loads data from the internal data storage.\n4. `createTask(task)`: Creates a new task in the task store.\n5. `runTask(taskId)`: Runs a task in the task store.\n\n**Method Implementations**\n\nHere are the implementations of the key methods:\n\n```typescript\nclass MemoryPalace {\n  private _data: any;\n  private _taskStore: TaskStore;\n  private _fileSystemAdapter: FileSystemAdapter;\n\n  init() {\n    // Initialize internal data storage\n    this._data = new FileSystemAdapter();\n    // Initialize task store\n    this._taskStore = new TaskStore();\n  }\n\n  save(data) {\n    // Save data to internal data storage\n    this._data.save(data);\n  }\n\n  load(dataId) {\n    // Load data from internal data storage\n    return this._data.load(dataId);\n  }\n\n  createTask(task) {\n    // Create new task in task store\n    this._taskStore.createTask(task);\n  }\n\n  runTask(taskId) {\n    // Run task in task store\n    return this._taskStore.runTask(taskId);\n  }\n}\n```\n\n**Usage Example**\n\nHere is an example of how to use the MemoryPalace class:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.init();\n\n// Save some data\nmemoryPalace.save({ id: 1, name: 'John' });\n\n// Load the data\nconst data = memoryPalace.load(1);\nconsole.log(data); // { id: 1, name: 'John' }\n\n// Create a new task\nmemoryPalace.createTask({ id: 1, function: () => console.log('Task 1') });\n\n// Run the task\nmemoryPalace.runTask(1);\n```\n\nThis example demonstrates how to use the MemoryPalace class to save and load data, as well as create and run tasks.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 339,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": true,
+        "overallScore": 85
+      },
+      "issues": [
+        "Should reference specific files but doesn't"
+      ]
+    },
+    {
+      "question": {
+        "id": "implementation-2",
+        "category": "Implementation",
+        "question": "Show me how the GitHubAdapter fetches files",
+        "expectedIntent": "implementation",
+        "successCriteria": {
+          "mustInclude": [
+            "GitHub",
+            "fetch"
+          ],
+          "shouldReferenceFiles": true,
+          "minLength": 100
+        }
+      },
+      "intent": {
+        "type": "implementation",
+        "confidence": 0.9,
+        "relevantViews": [
+          "path-management-architecture",
+          "alexandria-core-library-adapter-architecture",
+          "excalidraw-drawing-support"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "Adapter",
+          "adapter",
+          "github",
+          "file",
+          "fetch"
+        ],
+        "relevantFiles": [
+          "src/node-adapters/NodeFileSystemAdapter.ts",
+          "src/pure-core/abstractions/filesystem.ts",
+          "src/test-adapters/InMemoryFileSystemAdapter.ts",
+          "src/MemoryPalace.ts",
+          "src/utils/alexandria-paths.ts"
+        ]
+      },
+      "response": "**GitHubAdapter Class Overview**\n\nThe GitHubAdapter class is a component of the project that provides an abstraction layer for interacting with the GitHub API. It allows the MemoryPalace class to fetch files from a GitHub repository.\n\n**Class Structure**\n\nThe GitHubAdapter class consists of several key properties and methods:\n\n1. **_githubApi**: This is the GitHub API instance, used to interact with the GitHub API.\n2. **_owner**: This is the owner of the GitHub repository.\n3. **_repo**: This is the name of the GitHub repository.\n\n**Key Methods**\n\n1. **fetchFile(filePath)`: Fetches a file from the GitHub repository.\n2. `fetchDirectory(directoryPath)`: Fetches a directory from the GitHub repository.\n\n**Method Implementations**\n\nHere are the implementations of the key methods:\n\n```typescript\nclass GitHubAdapter {\n  private _githubApi: any;\n  private _owner: string;\n  private _repo: string;\n\n  constructor(owner: string, repo: string) {\n    this._owner = owner;\n    this._repo = repo;\n    this._githubApi = new GitHubApi();\n  }\n\n  fetchFile(filePath: string): Promise<any> {\n    // Construct the GitHub API URL\n    const url = `https://api.github.com/repos/${this._owner}/${this._repo}/contents/${filePath}`;\n    // Make a GET request to the GitHub API\n    return this._githubApi.get(url)\n      .then(response => {\n        // Parse the response as JSON\n        const data = response.data;\n        // Return the file contents\n        return data.content;\n      })\n      .catch(error => {\n        // Handle errors\n        console.error(error);\n        return null;\n      });\n  }\n\n  fetchDirectory(directoryPath: string): Promise<any> {\n    // Construct the GitHub API URL\n    const url = `https://api.github.com/repos/${this._owner}/${this._repo}/contents/${directoryPath}`;\n    // Make a GET request to the GitHub API\n    return this._githubApi.get(url)\n      .then(response => {\n        // Parse the response as JSON\n        const data = response.data;\n        // Return the directory contents\n        return data.content;\n      })\n      .catch(error => {\n        // Handle errors\n        console.error(error);\n        return null;\n      });\n  }\n}\n```\n\n**Usage Example**\n\nHere is an example of how to use the GitHubAdapter class:\n```typescript\nconst githubAdapter = new GitHubAdapter('octocat', 'Hello-World');\nconst filePath = 'readme.md';\ngithubAdapter.fetchFile(filePath)\n  .then(fileContents => console.log(fileContents))\n  .catch(error => console.error(error));\n```\n\nThis example demonstrates how to use the GitHubAdapter class to fetch a file from a GitHub repository.\n\n**Using the GitHubAdapter with the MemoryPalace class**\n\nHere is an example of how to use the GitHubAdapter class with the MemoryPalace class:\n```typescript\nconst memoryPalace = new MemoryPalace();\nconst githubAdapter = new GitHubAdapter('octocat', 'Hello-World');\nmemoryPalace.save(githubAdapter.fetchFile('readme.md'));\n```\n\nThis example demonstrates how to use the GitHubAdapter class to fetch a file from a GitHub repository and save it to the MemoryPalace class.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 366,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 85
+      },
+      "issues": [
+        "Should reference specific files but doesn't"
+      ]
+    },
+    {
+      "question": {
+        "id": "implementation-3",
+        "category": "Implementation",
+        "question": "How does the prefetchAlexandriaFiles method work?",
+        "expectedIntent": "implementation",
+        "successCriteria": {
+          "mustInclude": [
+            "prefetch"
+          ],
+          "shouldReferenceFiles": true,
+          "minLength": 100
+        }
+      },
+      "intent": {
+        "type": "implementation",
+        "confidence": 0.9,
+        "relevantViews": [
+          "excalidraw-drawing-support",
+          "path-management-architecture",
+          "alexandria-core-library-adapter-architecture"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "Alexandria",
+          "file",
+          "fetch"
+        ],
+        "relevantFiles": [
+          "src/pure-core/abstractions/filesystem.ts",
+          "src/node-adapters/NodeFileSystemAdapter.ts",
+          "src/utils/alexandria-paths.ts",
+          "src/pure-core/stores/DrawingStore.ts",
+          "src/MemoryPalace.ts"
+        ]
+      },
+      "response": "**prefetchAlexandriaFiles Method Overview**\n\nThe prefetchAlexandriaFiles method is a part of the MemoryPalace class that is responsible for prefetching Alexandria files from the file system. This method is used to pre-load files into memory to improve performance and reduce latency.\n\n**Method Implementation**\n\nHere is an example of how the prefetchAlexandriaFiles method might be implemented:\n```typescript\nclass MemoryPalace {\n  // ...\n\n  prefetchAlexandriaFiles() {\n    // Construct the path to the Alexandria files directory\n    const alexandriaFilesPath = this._fileSystemAdapter.getDirectoryPath('alexandria');\n\n    // Use the file system adapter to get a list of files in the Alexandria directory\n    return this._fileSystemAdapter.getFiles(alexandriaFilesPath)\n      .then(files => {\n        // Prefetch each file in the list\n        files.forEach(file => {\n          this._fileSystemAdapter.readFile(file)\n            .then(fileContents => {\n              // Store the file contents in memory\n              this._data[file.name] = fileContents;\n            })\n            .catch(error => {\n              // Handle errors\n              console.error(error);\n            });\n        });\n      })\n      .catch(error => {\n        // Handle errors\n        console.error(error);\n      });\n  }\n}\n```\n\n**How the Method Works**\n\nHere's a step-by-step explanation of how the prefetchAlexandriaFiles method works:\n\n1. **Construct the path to the Alexandria files directory**: The method constructs the path to the directory where Alexandria files are stored.\n2. **Get a list of files in the Alexandria directory**: The method uses the file system adapter to get a list of files in the Alexandria directory.\n3. **Prefetch each file in the list**: The method iterates over the list of files and uses the file system adapter to read each file.\n4. **Store the file contents in memory**: The method stores the contents of each file in memory, so that it can be accessed quickly in the future.\n\n**Usage Example**\n\nHere is an example of how to use the prefetchAlexandriaFiles method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.prefetchAlexandriaFiles();\n```\n\nThis example demonstrates how to use the prefetchAlexandriaFiles method to prefetch Alexandria files from the file system.\n\n**Using the prefetchAlexandriaFiles method with the GitHubAdapter class**\n\nHere is an example of how to use the prefetchAlexandriaFiles method with the GitHubAdapter class:\n```typescript\nconst memoryPalace = new MemoryPalace();\nconst githubAdapter = new GitHubAdapter('octocat', 'Hello-World');\nmemoryPalace.prefetchAlexandriaFiles(githubAdapter);\n```\n\nThis example demonstrates how to use the prefetchAlexandriaFiles method to prefetch Alexandria files from the file system, using the GitHubAdapter class to read the files from the GitHub repository.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 360,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 85
+      },
+      "issues": [
+        "Should reference specific files but doesn't"
+      ]
+    },
+    {
+      "question": {
+        "id": "usage-1",
+        "category": "Usage",
+        "question": "How do I use the MemoryPalace API?",
+        "expectedIntent": "usage",
+        "successCriteria": {
+          "mustInclude": [
+            "use",
+            "api"
+          ],
+          "minLength": 80,
+          "maxLength": 400,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "implementation",
+        "confidence": 0.9,
+        "relevantViews": [
+          "memorypalace-guide",
+          "task-system-architecture",
+          "excalidraw-drawing-support"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "MemoryPalace",
+          "memory",
+          "palace"
+        ],
+        "relevantFiles": [
+          "src/MemoryPalace.ts",
+          "src/pure-core/types/index.ts",
+          "src/pure-core/types/task.ts",
+          "src/pure-core/stores/TaskStore.ts",
+          "src/pure-core/stores/DrawingStore.ts"
+        ]
+      },
+      "response": "**Using the MemoryPalace API**\n\nThe MemoryPalace API provides a set of methods that can be used to interact with the MemoryPalace instance. Here are some examples of how to use the MemoryPalace API:\n\n**Saving Data**\n\nTo save data to the MemoryPalace instance, you can use the `save()` method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.save({ id: 1, name: 'John' });\n```\n\n**Loading Data**\n\nTo load data from the MemoryPalace instance, you can use the `load()` method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nconst data = memoryPalace.load(1);\nconsole.log(data); // { id: 1, name: 'John' }\n```\n\n**Prefetching Files**\n\nTo prefetch files from the MemoryPalace instance, you can use the `prefetchFiles()` method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.prefetchFiles();\n```\n\n**Creating Tasks**\n\nTo create a new task in the MemoryPalace instance, you can use the `createTask()` method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.createTask({ id: 1, function: () => console.log('Task 1') });\n```\n\n**Running Tasks**\n\nTo run a task in the MemoryPalace instance, you can use the `runTask()` method:\n```typescript\nconst memoryPalace = new MemoryPalace();\nmemoryPalace.runTask(1);\n```\n\n**Using the MemoryPalace API with the GitHubAdapter class**\n\nHere is an example of how to use the MemoryPalace API with the GitHubAdapter class:\n```typescript\nconst memoryPalace = new MemoryPalace();\nconst githubAdapter = new GitHubAdapter('octocat', 'Hello-World');\nmemoryPalace.save(githubAdapter.fetchFile('readme.md'));\n```\n\nThis example demonstrates how to use the MemoryPalace API to save a file to the MemoryPalace instance, using the GitHubAdapter class to fetch the file from the GitHub repository.\n\n**API Methods**\n\nHere is a list of the API methods provided by the MemoryPalace class:\n\n* `save(data)`: Saves data to the MemoryPalace instance.\n* `load(id)`: Loads data from the MemoryPalace instance.\n* `prefetchFiles()`: Prefetches files from the MemoryPalace instance.\n* `createTask(task)`: Creates a new task in the MemoryPalace instance.\n* `runTask(id)`: Runs a task in the MemoryPalace instance.\n\n**API Return Types**\n\nHere is a list of the return types for each API method:\n\n* `save(data)`: No return value.\n* `load(id)`: Returns the loaded data.\n* `prefetchFiles()`: No return value.\n* `createTask(task)`: No return value.\n* `runTask(id)`: No return value.\n\nNote that the API methods are asynchronous, meaning that they return promises that resolve to the desired value.",
+      "metrics": {
+        "intentCorrect": false,
+        "responseLength": 358,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 65
+      },
+      "issues": [
+        "Intent mismatch: expected usage, got implementation",
+        "Response not optimized for voice/TTS"
+      ]
+    },
+    {
+      "question": {
+        "id": "usage-2",
+        "category": "Usage",
+        "question": "How do I get started with this library?",
+        "expectedIntent": "usage",
+        "successCriteria": {
+          "mustInclude": [
+            "start"
+          ],
+          "minLength": 80,
+          "maxLength": 400,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "implementation",
+        "confidence": 0.9,
+        "relevantViews": [
+          "alexandria-core-library-adapter-architecture",
+          "future-enhancements"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "Library"
+        ],
+        "relevantFiles": [
+          "src/pure-core/abstractions/filesystem.ts",
+          "src/node-adapters/NodeFileSystemAdapter.ts",
+          "src/config/types.ts",
+          ".alexandriarc.json",
+          "src/pure-core/"
+        ]
+      },
+      "response": "**Getting Started with the Library**\n\nTo get started with the library, you'll need to follow these steps:\n\n1. **Install the Library**: Run the following command in your terminal to install the library:\n```bash\nnpm install memory-palace\n```\n2. **Import the Library**: In your JavaScript file, import the library using the following code:\n```javascript\nconst MemoryPalace = require('memory-palace');\n```\n3. **Create a MemoryPalace Instance**: Create a new instance of the MemoryPalace class using the following code:\n```javascript\nconst memoryPalace = new MemoryPalace();\n```\n4. **Use the API Methods**: Use the API methods provided by the MemoryPalace class to interact with the library. For example:\n```javascript\nmemoryPalace.save({ id: 1, name: 'John' });\nconst data = memoryPalace.load(1);\n```\n5. **Configure the Library**: You can configure the library by passing options to the constructor. For example:\n```javascript\nconst memoryPalace = new MemoryPalace({\n  storage: 'local',\n  cache: true,\n  debug: true,\n});\n```\n**Available Options**\n\nHere is a list of available options that you can pass to the constructor:\n\n* `storage`: The storage engine to use (e.g. `local`, `session`, `localStorage`).\n* `cache`: Whether to enable caching (default: `true`).\n* `debug`: Whether to enable debug logging (default: `false`).\n\n**Example Use Case**\n\nHere is an example use case that demonstrates how to use the library:\n```javascript\nconst memoryPalace = new MemoryPalace({\n  storage: 'local',\n  cache: true,\n  debug: true,\n});\n\nmemoryPalace.save({ id: 1, name: 'John' });\n\nconst data = memoryPalace.load(1);\nconsole.log(data); // { id: 1, name: 'John' }\n```\nThis example creates a new instance of the MemoryPalace class with the specified options, saves a piece of data to the library, and then loads the data using the `load()` method.\n\n**API Documentation**\n\nYou can find the API documentation for the library on our website: [https://memory-palace.github.io/api/](https://memory-palace.github.io/api/)\n\nWe also provide a comprehensive guide to getting started with the library on our website: [https://memory-palace.github.io/getting-started/](https://memory-palace.github.io/getting-started/)",
+      "metrics": {
+        "intentCorrect": false,
+        "responseLength": 300,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 65
+      },
+      "issues": [
+        "Intent mismatch: expected usage, got implementation",
+        "Response not optimized for voice/TTS"
+      ]
+    },
+    {
+      "question": {
+        "id": "usage-3",
+        "category": "Usage",
+        "question": "Give me an example of loading a repository",
+        "expectedIntent": "usage",
+        "successCriteria": {
+          "mustInclude": [
+            "example",
+            "repository"
+          ],
+          "minLength": 80,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "usage",
+        "confidence": 0.85,
+        "relevantViews": [
+          "repository-metadata-standardization"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "Repository",
+          "repository",
+          "load"
+        ],
+        "relevantFiles": []
+      },
+      "response": "**Loading a Repository**\n\nTo load a repository, you can use the `loadRepository()` method provided by the MemoryPalace class. Here's an example:\n```javascript\nconst memoryPalace = new MemoryPalace();\n\nmemoryPalace.loadRepository('octocat/Hello-World')\n  .then(repository => {\n    console.log(repository); // { name: 'Hello-World', owner: 'octocat' }\n  })\n  .catch(error => {\n    console.error(error);\n  });\n```\nThis example loads the `Hello-World` repository owned by `octocat` from the GitHub API.\n\n**Loading a Repository with Specific Options**\n\nYou can also load a repository with specific options by passing an options object to the `loadRepository()` method. Here's an example:\n```javascript\nconst memoryPalace = new MemoryPalace();\n\nmemoryPalace.loadRepository('octocat/Hello-World', {\n  owner: 'octocat',\n  repo: 'Hello-World',\n  branch: 'main',\n  path: '/path/to/file',\n})\n  .then(repository => {\n    console.log(repository); // { name: 'Hello-World', owner: 'octocat' }\n  })\n  .catch(error => {\n    console.error(error);\n  });\n```\nThis example loads the `Hello-World` repository owned by `octocat` from the GitHub API with specific options.\n\n**Available Options**\n\nHere is a list of available options that you can pass to the `loadRepository()` method:\n\n* `owner`: The owner of the repository (required).\n* `repo`: The name of the repository (required).\n* `branch`: The branch to load (default: `main`).\n* `path`: The path to the file to load (optional).\n\n**Repository Loading Modes**\n\nThe `loadRepository()` method supports two loading modes:\n\n* **Sync**: The repository is loaded synchronously. This mode is useful for development and testing purposes.\n* **Async**: The repository is loaded asynchronously. This mode is useful for production environments where the repository loading process can be slow.\n\nYou can specify the loading mode by passing a `mode` option to the `loadRepository()` method:\n```javascript\nmemoryPalace.loadRepository('octocat/Hello-World', {\n  mode: 'sync', // or 'async'\n})\n  .then(repository => {\n    console.log(repository); // { name: 'Hello-World', owner: 'octocat' }\n  })\n  .catch(error => {\n    console.error(error);\n  });\n```\n**Repository Loading Error Handling**\n\nThe `loadRepository()` method returns a promise that resolves to the loaded repository or rejects with an error if the loading process fails. You can handle the error by using the `catch()` method:\n```javascript\nmemoryPalace.loadRepository('octocat/Hello-World')\n  .catch(error => {\n    console.error(error);\n  });\n```\nThis example catches any errors that occur during the repository loading process and logs them to the console.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 340,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 85
+      },
+      "issues": [
+        "Response not optimized for voice/TTS"
+      ]
+    },
+    {
+      "question": {
+        "id": "comparison-1",
+        "category": "Comparison",
+        "question": "What's the difference between getView and listViews?",
+        "expectedIntent": "comparison",
+        "successCriteria": {
+          "mustInclude": [
+            "getView",
+            "listViews"
+          ],
+          "minLength": 80,
+          "maxLength": 400,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "comparison",
+        "confidence": 0.85,
+        "relevantViews": [
+          "ai-agent-instructions",
+          "alexandria-core-library-adapter-architecture",
+          "alexandriaoutpostmanager-guide"
+        ],
+        "needsFileContent": true,
+        "keywords": [
+          "view"
+        ],
+        "relevantFiles": [
+          "src/pure-core/abstractions/filesystem.ts",
+          "src/node-adapters/NodeFileSystemAdapter.ts",
+          "src/projects-core/AlexandriaOutpostManager.ts",
+          "src/pure-core/types/repository.ts",
+          "src/test-adapters/InMemoryFileSystemAdapter.ts"
+        ]
+      },
+      "response": "**getView and listViews**\n\nThe `getView` and `listViews` methods are two different ways to access and manipulate views in the project.\n\n**getView**\n\nThe `getView` method is used to retrieve a specific view by its ID. It takes the view ID as a parameter and returns the corresponding view object. Here is an example:\n```javascript\nconst view = memoryPalace.getView('my-view');\nconsole.log(view); // { id: 'my-view', name: 'My View' }\n```\n**listViews**\n\nThe `listViews` method is used to retrieve a list of all views in the project. It returns an array of view objects, each representing a view in the project. Here is an example:\n```javascript\nconst views = memoryPalace.listViews();\nconsole.log(views); // [{ id: 'my-view', name: 'My View' }, { id: 'another-view', name: 'Another View' }]\n```\n**Key differences**\n\nHere are the key differences between `getView` and `listViews`:\n\n* **Retrieval method**: `getView` retrieves a specific view by its ID, while `listViews` retrieves a list of all views in the project.\n* **Return value**: `getView` returns a single view object, while `listViews` returns an array of view objects.\n* **Usage**: `getView` is typically used when you need to access a specific view by its ID, while `listViews` is used when you need to iterate over a list of all views in the project.\n\n**Example use cases**\n\nHere are some example use cases for `getView` and `listViews`:\n\n* **getView**: When you need to access a specific view by its ID, such as when creating a new view or updating an existing view.\n```javascript\nconst view = memoryPalace.getView('my-view');\nview.name = 'New Name';\nmemoryPalace.saveView(view);\n```\n* **listViews**: When you need to iterate over a list of all views in the project, such as when creating a list of all views or deleting multiple views.\n```javascript\nconst views = memoryPalace.listViews();\nviews.forEach(view => {\n  console.log(view.name);\n});\n```\nIn summary, `getView` is used to retrieve a specific view by its ID, while `listViews` is used to retrieve a list of all views in the project.",
+      "metrics": {
+        "intentCorrect": true,
+        "responseLength": 324,
+        "includesRequired": true,
+        "excludesForbidden": true,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 85
+      },
+      "issues": [
+        "Response not optimized for voice/TTS"
+      ]
+    },
+    {
+      "question": {
+        "id": "comparison-2",
+        "category": "Comparison",
+        "question": "When should I use GitHubAdapter vs GitHubGlobAdapter?",
+        "expectedIntent": "comparison",
+        "successCriteria": {
+          "mustInclude": [
+            "GitHubAdapter",
+            "GitHubGlobAdapter"
+          ],
+          "minLength": 80,
+          "shouldBeVoiceFriendly": true
+        }
+      },
+      "intent": {
+        "type": "overview",
+        "confidence": 0,
+        "relevantViews": [],
+        "relevantFiles": [],
+        "keywords": [],
+        "needsFileContent": false
+      },
+      "response": "",
+      "metrics": {
+        "intentCorrect": false,
+        "responseLength": 0,
+        "includesRequired": false,
+        "excludesForbidden": false,
+        "referencesFiles": false,
+        "voiceFriendly": false,
+        "overallScore": 0
+      },
+      "issues": [
+        "Error: Error: 413 {\"error\":{\"message\":\"Request too large for model `llama-3.1-8b-instant` in organization `org_01jd3z3q8dfm2t4fn69nwwerpx` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 6419, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}"
+      ]
+    }
+  ]
+}

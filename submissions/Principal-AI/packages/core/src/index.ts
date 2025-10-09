@@ -5,7 +5,7 @@
  * and LLM services for the Principal AI platform.
  */
 
-export const version = "0.1.0";
+export const version = "0.3.0";
 
 // Adapters for GitHub integration
 export { GitHubFileSystemAdapter } from "./adapters/GitHubFileSystemAdapter";
@@ -19,3 +19,11 @@ export type {
   ConversationMessage,
   ConversationResponseOptions
 } from "./services/LLMService";
+
+// View-Aware Context Builder
+export { ViewAwareContextBuilder } from "./services/ViewAwareContextBuilder";
+export type {
+  QuestionIntent,
+  QuestionType,
+  IntentAnalysisResult
+} from "./services/ViewAwareContextBuilder";

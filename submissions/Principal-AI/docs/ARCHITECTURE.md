@@ -6,35 +6,36 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                 BROWSER (Client-Side)                       │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   React UI   │  │  Agora SDK   │  │  HeyGen SDK  │      │
-│  │              │  │  (WebRTC)    │  │  (WebRTC)    │      │
+│  │  Next.js UI  │  │  Agora SDK   │  │  HeyGen SDK  │      │
+│  │   (React)    │  │  (WebRTC)    │  │  (Streaming) │      │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
 │         │                 │                  │              │
 │         └─────────────────┼──────────────────┘              │
 │                           │                                 │
-│                  HTTP POST (REST API)                       │
+│                  HTTP POST/GET (REST API)                   │
 └───────────────────────────┼─────────────────────────────────┘
                             │
                    ┌────────▼────────┐
-                   │ Appwrite        │
-                   │ Functions       │
-                   │ (API Routes)    │
+                   │   Next.js       │
+                   │  API Routes     │
+                   │  (/api/chat)    │
                    └────────┬────────┘
                             │
-                   ┌────────▼────────┐
-                   │  EXTERNAL PKG   │
-                   │ @principal/core │
-                   │                 │
-                   │ • GitHub Parser │
-                   │ • Doc Loader    │
-                   │ • LLM Service   │
-                   │ • Context Mgmt  │
-                   └─────────────────┘
+                   ┌────────▼────────────────┐
+                   │  NPM PACKAGE            │
+                   │ @principal-ade/ai-brain │
+                   │  (v0.2.0)               │
+                   │                         │
+                   │ • GitHub Adapters       │
+                   │ • MemoryPalace Access   │
+                   │ • LLM Service (Groq)    │
+                   │ • Context Management    │
+                   └─────────────────────────┘
 ```
 
 ## Data Flow Diagram
 
-### Initial Setup Flow
+### Initial Setup Flow (MemoryPalace Integration)
 
 ```
 ┌─────────┐
@@ -45,41 +46,45 @@
 ┌─────────────────┐
 │  Next.js UI     │
 └────┬────────────┘
-     │ 2. POST /api/load-repo
+     │ 2. POST /api/load-repo (PLANNED)
      ▼
 ┌──────────────────────┐
-│  API Orchestrator    │
+│  Next.js API Route   │
 └────┬─────────────────┘
-     │ 3. Call @principal/core
+     │ 3. Call @principal-ade/ai-brain
      ▼
-┌─────────────────────────────────┐
-│    @principal/core              │
-│  ┌──────────────────┐           │
-│  │ GitHub Loader    │           │
-│  └────┬─────────────┘           │
-│       │ 4. Fetch repo files     │
-│       │    (CLAUDE.md, README)  │
-│       ▼                         │
-│  ┌──────────────────┐           │
-│  │ Document Parser  │           │
-│  └────┬─────────────┘           │
-│       │ 5. Parse & chunk docs   │
-│       ▼                         │
-│  ┌──────────────────┐           │
-│  │ Context Store    │           │
-│  └────┬─────────────┘           │
-└───────┼─────────────────────────┘
-        │ 6. Return codebase context
+┌─────────────────────────────────────┐
+│    @principal-ade/ai-brain          │
+│  ┌──────────────────────┐           │
+│  │ GitHubFileSystem     │           │
+│  │ Adapter              │           │
+│  └────┬─────────────────┘           │
+│       │ 4. Fetch .alexandria/       │
+│       │    directory structure      │
+│       ▼                             │
+│  ┌──────────────────────┐           │
+│  │ In-Memory Cache      │           │
+│  └────┬─────────────────┘           │
+│       │ 5. Cache all files          │
+│       ▼                             │
+│  ┌──────────────────────┐           │
+│  │ MemoryPalace         │           │
+│  │ (@a24z/core-library) │           │
+│  └────┬─────────────────┘           │
+│       │ 6. Parse views, notes       │
+│       │    guidance docs            │
+└───────┼─────────────────────────────┘
+        │ 7. Return MemoryPalace instance
         ▼
 ┌──────────────────────┐
-│  Appwrite Database   │
-│  • Repo metadata     │
-│  • Parsed docs       │
-│  • Session state     │
+│  Session Store       │
+│  (In-Memory/Future)  │
+│  • Palace instance   │
+│  • Conversation hist │
 └──────────────────────┘
 ```
 
-### Voice Conversation Flow (Browser-Based)
+### Voice Conversation Flow (Planned Implementation)
 
 ```
 ┌─────────┐
@@ -91,7 +96,7 @@
 │      BROWSER (Client-Side)      │
 │  ┌──────────────────┐           │
 │  │  Agora SDK       │           │
-│  │  (WebRTC)        │           │
+│  │  (v4.24.0)       │           │
 │  └────┬─────────────┘           │
 │       │ 2. Speech-to-Text       │
 │       ▼                         │
@@ -102,37 +107,40 @@
         │ 3. POST /api/chat
         ▼
 ┌──────────────────────┐
-│  Appwrite Function   │
+│  Next.js API Route   │
 │  /api/chat           │
 └────┬─────────────────┘
-     │ 4. Text + Session ID
+     │ 4. Text + Conversation History
      ▼
-┌─────────────────────────────────┐
-│    @principal/core              │
-│  ┌──────────────────┐           │
-│  │ Context Retriever│           │
-│  └────┬─────────────┘           │
-│       │ 5. Get relevant docs    │
-│       ▼                         │
-│  ┌──────────────────┐           │
-│  │ LLM Service      │◄──────────┤ Codebase
-│  │ (Groq)           │  6. Inject│ Context
-│  └────┬─────────────┘   context │
-│       │ 7. Generate response    │
-└───────┼─────────────────────────┘
+┌─────────────────────────────────────┐
+│    @principal-ade/ai-brain          │
+│  ┌──────────────────────┐           │
+│  │ MemoryPalace         │           │
+│  │ Instance             │           │
+│  └────┬─────────────────┘           │
+│       │ 5. Get codebase context     │
+│       ▼                             │
+│  ┌──────────────────────┐           │
+│  │ LLMService           │◄──────────┤ Views,
+│  │ (Groq API)           │  6. Inject│ Notes,
+│  │ llama-3.1-8b-instant │   context │ Guidance
+│  └────┬─────────────────┘           │
+│       │ 7. Generate response        │
+└───────┼─────────────────────────────┘
         │ 8. Text response
         ▼
 ┌─────────────────────────────────┐
 │      BROWSER (Client-Side)      │
 │  ┌──────────────────┐           │
 │  │ ElevenLabs API   │           │
-│  │ (TTS)            │           │
+│  │ (TTS - PLANNED)  │           │
 │  └────┬─────────────┘           │
 │       │ 9. Audio stream         │
 │       ▼                         │
 │  ┌──────────────────┐           │
 │  │  HeyGen SDK      │           │
-│  │  (Avatar+Lipsync)│           │
+│  │  (v2.1.0)        │           │
+│  │  Avatar+Lipsync  │           │
 │  └────┬─────────────┘           │
 │       │ 10. Render video        │
 │       ▼                         │
@@ -144,52 +152,112 @@
 
 ## Component Responsibilities
 
-### Browser (Client-Side)
-- **React UI**: GitHub URL input, avatar display, conversation UI
-- **Agora SDK (WebRTC)**: Real-time voice I/O, speech-to-text (browser-based)
-- **HeyGen SDK (WebRTC)**: Avatar rendering, video streaming, lip-sync (browser-based)
-- **ElevenLabs API**: Text-to-speech audio generation (called from browser)
+### Browser (Client-Side) - Next.js Frontend
+**Status: Foundation Built, Integration Tests In Progress**
 
-### Appwrite Functions (Serverless)
-- **API Routes**: Simple REST endpoints (no WebSockets needed)
-- **Session Management**: Store/retrieve conversation state
-- **Request Routing**: Coordinate between frontend and @principal/core
+- **Next.js UI (React 19)**:
+  - GitHub URL input forms
+  - Avatar display container
+  - Conversation UI
+  - Test pages for each integration
 
-### External Package (@principal/core)
-- **GitHub Loader**: Fetch repo contents via GitHub API
-- **Document Parser**: Extract and structure docs (CLAUDE.md, README, etc.)
-- **Context Manager**: Store, retrieve, and chunk documentation
-- **LLM Service**: Groq API integration, prompt engineering
-- **Response Generator**: Context injection + response generation
+- **Agora SDK (v4.24.0)**:
+  - Real-time voice I/O via WebRTC
+  - Speech-to-text (browser-based)
+  - Test page: `/agora-test`
+
+- **HeyGen SDK (v2.1.0)**:
+  - Avatar rendering with streaming
+  - Video streaming via WebRTC
+  - Lip-sync synchronization
+  - Test page: `/heygen-test`
+
+- **ElevenLabs API**:
+  - Text-to-speech audio generation
+  - Called from browser
+  - Test page: `/elevenlabs-test`
+
+- **Theme System**:
+  - `@a24z/industry-theme` for consistent UI
+  - `themed-markdown` for documentation display
+
+### Next.js API Routes (Serverless)
+**Status: Partially Implemented**
+
+- **REST Endpoints**: Simple HTTP POST/GET (no WebSockets)
+- **Session Management**: Planned - store/retrieve conversation state
+- **Request Routing**: Coordinate between frontend and @principal-ade/ai-brain
+- **Implemented Routes**:
+  - `/api/chat` - Basic chat endpoint (in development)
+
+### NPM Package (@principal-ade/ai-brain v0.2.0)
+**Status: Core Functionality Complete, Published**
+
+- **GitHub Adapters**:
+  - `GitHubFileSystemAdapter` - Pre-fetch & cache repo files
+  - `GitHubGlobAdapter` - File tree fetching with glob patterns
+
+- **MemoryPalace Integration**:
+  - Access `.alexandria/` directory structure
+  - Load codebase views, notes, and guidance
+  - Leverages `@a24z/core-library` for context management
+
+- **LLM Service**:
+  - Groq API integration (llama-3.1-8b-instant)
+  - Speech-optimized model for conversational AI
+  - Conversation history support
+  - Streaming and non-streaming responses
+  - Context injection from MemoryPalace
+
+- **Response Generator**:
+  - Build system prompts with codebase context
+  - Reference specific files from views
+  - Multi-turn conversation support
 
 ## API Endpoints
 
-### `/api/load-repo`
+### `/api/load-repo` (PLANNED)
 ```typescript
 POST /api/load-repo
 Body: { repoUrl: string }
 
 Flow:
 1. Validate GitHub URL
-2. Call @principal/core.loadRepository(url)
-3. Store context in Appwrite
-4. Return session ID + metadata
+2. Call @principal-ade/ai-brain adapters to fetch .alexandria/
+3. Initialize MemoryPalace instance
+4. Store Palace instance in session (in-memory or Redis)
+5. Return session ID + metadata
 
-Response: { sessionId, repoName, filesProcessed }
+Response: {
+  sessionId: string,
+  repoName: string,
+  views: Array<ViewMetadata>,
+  guidanceLoaded: boolean
+}
 ```
 
-### `/api/chat`
+### `/api/chat` (IN DEVELOPMENT)
 ```typescript
 POST /api/chat
-Body: { sessionId: string, message: string }
+Body: {
+  sessionId: string,
+  message: string,
+  conversationHistory?: Array<ConversationMessage>
+}
 
 Flow:
-1. Retrieve session context from Appwrite
-2. Call @principal/core.generateResponse(context, message)
+1. Retrieve MemoryPalace instance from session
+2. Call LLMService.generateConversationResponse()
+   - Inject codebase context from MemoryPalace
+   - Include conversation history
+   - Generate response via Groq API
 3. Return text response
 4. Frontend handles TTS + Avatar separately
 
-Response: { text: string, conversationId: string }
+Response: {
+  text: string,
+  conversationId: string
+}
 ```
 
 ### Client-Side SDKs (No Server-Side Streaming Needed)
@@ -256,40 +324,95 @@ Response: { text: string, conversationId: string }
 └──────────────────────────────────────────────┘
 ```
 
-## Why This Split?
+## Implementation Status
 
-### @principal/core as separate package:
-✅ Reusable across different frontends (CLI, VSCode extension, web)
-✅ Testable in isolation (unit tests for parsing, LLM calls)
-✅ Can be published privately and versioned independently
-✅ Clear API contract between UI and AI logic
-✅ Easier to swap LLM providers or parsing strategies
+### ✅ Completed
+1. **@principal-ade/ai-brain package (v0.2.0)**
+   - GitHub adapters for fetching .alexandria/ directories
+   - MemoryPalace integration via @a24z/core-library
+   - LLM Service with Groq API (llama-3.1-8b-instant)
+   - Conversation history support
+   - Published to npm as public package
+
+2. **Next.js Frontend Foundation**
+   - Project scaffolding with React 19
+   - Theme system integration (@a24z/industry-theme)
+   - Test pages for each partner technology
+   - Dependencies installed (Agora, HeyGen, ElevenLabs)
+
+### 🔄 In Progress
+1. **Integration Testing**
+   - Individual SDK test pages created
+   - Testing voice I/O with Agora
+   - Testing avatar rendering with HeyGen
+   - Testing TTS with ElevenLabs
+
+2. **API Routes**
+   - `/api/chat` endpoint started
+   - Session management architecture planned
+
+### 📋 Planned
+1. **User Experience Integration**
+   - Connect all components into cohesive UX
+   - Implement full conversation flow
+   - Build main application UI
+
+2. **Deployment**
+   - Deploy to production hosting
+   - Environment configuration
+   - Production testing
+
+## Why This Architecture?
+
+### @principal-ade/ai-brain as separate NPM package:
+✅ **Reusable** - Works across different frontends (CLI, VSCode extension, web)
+✅ **Testable** - Unit tests for parsing, LLM calls in isolation
+✅ **Versioned** - Published independently with semantic versioning
+✅ **Clear Contract** - Well-defined API between UI and AI logic
+✅ **Swappable** - Easy to change LLM providers or parsing strategies
+✅ **Published** - Available as @principal-ade/ai-brain on npm
 
 ### Browser-based architecture:
-✅ No server-side WebSocket infrastructure needed
-✅ WebRTC handles real-time audio/video (Agora + HeyGen SDKs)
-✅ Simple REST APIs deployable to Appwrite Functions
-✅ Scalable serverless deployment with no persistent connections
+✅ **Serverless** - No server-side WebSocket infrastructure needed
+✅ **WebRTC** - Real-time audio/video via Agora + HeyGen SDKs
+✅ **Simple APIs** - REST endpoints deployable anywhere
+✅ **Scalable** - No persistent connections to manage
+✅ **Fast** - Direct browser-to-service communication
 
-## Development Workflow
+### MemoryPalace Integration:
+✅ **Structured Context** - Leverage .alexandria/ codebase views
+✅ **Rich Documentation** - Access notes, guidance, and file references
+✅ **Proven Pattern** - Uses established @a24z/core-library
+✅ **Intelligent Responses** - LLM gets structured codebase knowledge
 
-1. **Develop @principal/core first**
-   - Build GitHub loader
-   - Implement doc parser
-   - Connect Groq LLM
-   - Test with sample repos
+## Development Workflow (Completed & Ongoing)
 
-2. **Build Next.js frontend**
-   - Create basic UI
-   - Integrate Agora SDK (browser)
-   - Add HeyGen SDK (browser)
-   - Wire up ElevenLabs API
+### Phase 1: Core Package ✅ COMPLETE
+   - Built GitHub adapters for .alexandria/ fetching
+   - Integrated MemoryPalace from @a24z/core-library
+   - Connected Groq LLM (llama-3.1-8b-instant)
+   - Tested with sample repositories
+   - Published to npm
 
-3. **Connect the pieces**
-   - Install @principal/core in Next.js project
-   - Implement REST API routes
-   - Test end-to-end flow
+### Phase 2: Frontend Foundation ✅ COMPLETE
+   - Created Next.js app with React 19
+   - Integrated theme system
+   - Installed all partner SDKs
+   - Created test pages for each integration
 
-4. **Deploy**
-   - Deploy Next.js app to Appwrite Functions (serverless)
-   - All voice/video processing happens client-side (browser)
+### Phase 3: Integration Testing 🔄 IN PROGRESS
+   - Testing Agora voice I/O
+   - Testing HeyGen avatar rendering
+   - Testing ElevenLabs TTS
+   - Testing LLM conversation flow
+
+### Phase 4: User Experience 📋 NEXT
+   - Design main application UI
+   - Connect all components
+   - Implement end-to-end conversation flow
+   - Polish user interactions
+
+### Phase 5: Deployment 📋 PLANNED
+   - Deploy to production hosting
+   - Configure production environment
+   - Final testing and demo preparation
