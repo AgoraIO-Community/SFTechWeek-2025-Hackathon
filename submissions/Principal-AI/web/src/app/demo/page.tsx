@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTheme } from "@a24z/industry-theme";
 import Link from "next/link";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
+import { useTTS } from "@/hooks/useTTS";
 import { LoadingAnimation } from "@/components/LoadingAnimation";
 
 interface ConversationMessage {
@@ -27,6 +28,10 @@ export default function DemoPage() {
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>("idle");
   const [textInput, setTextInput] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
+
+  // Avatar & TTS toggles
+  const [enableTTS, setEnableTTS] = useState<boolean>(false);
+  const [enableAvatar, setEnableAvatar] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAvatarReady, setIsAvatarReady] = useState<boolean>(false);
 
@@ -41,6 +46,9 @@ export default function DemoPage() {
     stopListening,
     resetTranscript,
   } = useVoiceInput();
+
+  // TTS hook
+  const { speak, stop: stopSpeaking, isSpeaking } = useTTS();
 
   // Set body background and html background color to match theme
   useEffect(() => {
@@ -65,6 +73,13 @@ export default function DemoPage() {
       resetTranscript();
     }
   }, [transcript, isListening, voiceStatus]);
+
+  // Handle TTS completion
+  useEffect(() => {
+    if (!isSpeaking && voiceStatus === "speaking") {
+      setVoiceStatus("idle");
+    }
+  }, [isSpeaking, voiceStatus]);
 
   const handleLoadRepo = async (): Promise<void> => {
     setIsLoading(true);
@@ -144,7 +159,15 @@ export default function DemoPage() {
         timestamp: new Date(),
       };
       setConversationHistory((prev) => [...prev, assistantMessage]);
-      setVoiceStatus("idle");
+
+      // Speak the response if TTS is enabled
+      if (enableTTS) {
+        setVoiceStatus("speaking");
+        speak(data.response);
+        // Note: We'll set back to idle when TTS finishes (handled by isSpeaking effect)
+      } else {
+        setVoiceStatus("idle");
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to send message";
       console.error("Error sending message:", err);
@@ -303,12 +326,38 @@ export default function DemoPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                flexWrap: "wrap",
+                gap: "1rem",
               }}
             >
-              <div>
+              <div style={{ flex: "1 1 auto" }}>
                 <span style={{ color: theme.colors.textSecondary, fontSize: "0.9rem" }}>Repository: </span>
                 <span style={{ fontFamily: theme.fonts.monospace, fontSize: "0.9rem" }}>{repoUrl}</span>
               </div>
+
+              {/* Feature Toggles */}
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", fontSize: "0.9rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={enableTTS}
+                    onChange={(e) => setEnableTTS(e.target.checked)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <span>Enable TTS</span>
+                </label>
+
+                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", fontSize: "0.9rem" }}>
+                  <input
+                    type="checkbox"
+                    checked={enableAvatar}
+                    onChange={(e) => setEnableAvatar(e.target.checked)}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <span>Enable Avatar</span>
+                </label>
+              </div>
+
               <button
                 onClick={() => setIsRepoLoaded(false)}
                 style={{
