@@ -1,6 +1,6 @@
 {
   "name": "@principal-ade/ai-brain",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Core library for Principal AI - GitHub parsing and LLM services with view-aware context",
   "repository": {
     "type": "git",
