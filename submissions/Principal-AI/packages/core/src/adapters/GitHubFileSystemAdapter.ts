@@ -21,6 +21,7 @@ export class GitHubFileSystemAdapter implements FileSystemAdapter {
   // Cache for file contents and directory structure
   private fileCache = new Map<string, string>();
   private directoryCache = new Map<string, string[]>();
+  private treeCache: GitHubTreeItem[] = [];
   private initialized = false;
 
   constructor(owner: string, repo: string, branch = "main", token?: string) {
@@ -57,6 +58,9 @@ export class GitHubFileSystemAdapter implements FileSystemAdapter {
 
     const data = await response.json();
     const tree: GitHubTreeItem[] = data.tree;
+
+    // Store tree for coverage calculations
+    this.treeCache = tree;
 
     // Build directory structure
     tree.forEach((item) => {
@@ -308,5 +312,15 @@ export class GitHubFileSystemAdapter implements FileSystemAdapter {
 
   getGitHubPath(): string {
     return this.githubPath;
+  }
+
+  /**
+   * Get all files from the cached GitHub tree
+   * Returns relative paths (not prefixed with githubPath)
+   */
+  getAllFiles(): string[] {
+    return this.treeCache
+      .filter((item) => item.type === "blob")
+      .map((item) => item.path);
   }
 }
