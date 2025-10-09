@@ -1,0 +1,43 @@
+HEYGEN STREAMING AVATAR - CONNECTION ISSUE (Quick Report)
+========================================================
+
+PROBLEM: WebRTC ICE connection fails after successful SDP negotiation
+
+ENVIRONMENT:
+- Browser: Chrome 141, macOS 10.15.7
+- Network: Corporate network
+- API: v1 Streaming Avatar (Free tier)
+
+WHAT WORKS:
+✅ API auth (200 OK, session_id received)
+✅ SDP negotiation (offer received, answer sent successfully)
+✅ 22 ICE candidates generated (host, srflx, relay)
+✅ Media tracks received (video + audio)
+
+WHAT FAILS:
+❌ ICE connection: checking → disconnected → failed
+
+KEY LOGS:
+✅ PeerConnection created with ICE servers: 5 servers
+✅ Remote/local descriptions set
+✅ Answer sent to HeyGen: {code: 100, message: 'success'}
+🧊 Generated 22 ICE candidates (18 host, 2 srflx, 4 relay)
+🔌 ICE connection state: checking
+⚠️ ICE connection state: disconnected (after ~5s)
+❌ Connection state: failed
+
+QUESTIONS:
+1. What ports/protocols need to be opened for HeyGen streaming?
+2. Do you have network requirements documentation?
+3. Known issues with corporate firewalls/VPNs?
+4. Can you see connection attempts from my IP?
+
+HYPOTHESIS: Corporate firewall blocking WebRTC/UDP traffic
+
+Please advise on:
+- Required firewall rules
+- Ports to whitelist
+- Diagnostic tools available
+
+Thank you!
+

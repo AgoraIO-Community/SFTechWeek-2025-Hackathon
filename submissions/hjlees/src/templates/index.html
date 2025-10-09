@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luna - AI Todo Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar bg-dark text-white p-3">
+                <h2 class="mb-4"><i class="fas fa-robot me-2"></i>Luna</h2>
+                <nav class="nav flex-column">
+                    <button class="nav-link btn btn-dark text-start mb-2 active" data-tab="chat">
+                        <i class="fas fa-comments me-2"></i>Chat
+                    </button>
+                    <button class="nav-link btn btn-dark text-start mb-2" data-tab="todos">
+                        <i class="fas fa-tasks me-2"></i>Todos
+                    </button>
+                    <button class="nav-link btn btn-dark text-start mb-2" data-tab="reminders">
+                        <i class="fas fa-bell me-2"></i>Reminders
+                    </button>
+                    <button class="nav-link btn btn-dark text-start mb-2" data-tab="voice">
+                        <i class="fas fa-microphone me-2"></i>Voice Chat
+                    </button>
+                    <button class="nav-link btn btn-dark text-start mb-2" data-tab="video">
+                        <i class="fas fa-video me-2"></i>Video Avatar
+                    </button>
+                </nav>
+                <div class="mt-auto pt-4">
+                    <button class="btn btn-outline-light w-100" id="resetBtn">
+                        <i class="fas fa-redo me-2"></i>Reset Chat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Chat Tab -->
+                <div class="tab-content active" id="chatTab">
+                    <div class="header mb-4">
+                        <h1>Chat with Luna</h1>
+                        <p class="text-muted">Your AI-powered productivity assistant</p>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="messages" id="chatMessages">
+                            <div class="message assistant">
+                                <div class="message-content">
+                                    <strong>Luna:</strong> Hello! I'm Luna, your personal productivity assistant. 
+                                    I can help you manage todos, set reminders, and stay organized. How can I help you today?
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group mt-3">
+                            <input type="text" class="form-control" id="chatInput" 
+                                   placeholder="Type your message here...">
+                            <button class="btn btn-primary" id="sendBtn">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Todos Tab -->
+                <div class="tab-content" id="todosTab">
+                    <div class="header mb-4">
+                        <h1>My Todos</h1>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary" data-filter="all">All</button>
+                            <button class="btn btn-outline-primary" data-filter="active">Active</button>
+                            <button class="btn btn-outline-primary" data-filter="completed">Completed</button>
+                        </div>
+                    </div>
+                    
+                    <div id="todosList" class="list-group">
+                        <!-- Todos will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Reminders Tab -->
+                <div class="tab-content" id="remindersTab">
+                    <div class="header mb-4">
+                        <h1>My Reminders</h1>
+                    </div>
+                    
+                    <div id="remindersList" class="list-group">
+                        <!-- Reminders will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Voice Chat Tab -->
+                <div class="tab-content" id="voiceTab">
+                    <div class="header mb-4">
+                        <h1>Voice Chat with Luna</h1>
+                        <p class="text-muted">Talk to Luna using voice - powered by Agora Conversational AI</p>
+                    </div>
+                    
+                    <div class="voice-container text-center">
+                        <div id="voiceStatus" class="mb-4">
+                            <span class="badge bg-secondary">Not Connected</span>
+                        </div>
+                        
+                        <div id="agoraVideoContainer" class="video-container mb-4">
+                            <!-- Agora video will be rendered here -->
+                        </div>
+                        
+                        <div class="voice-controls">
+                            <button class="btn btn-lg btn-success" id="startVoiceBtn">
+                                <i class="fas fa-microphone"></i> Start Voice Chat
+                            </button>
+                            <button class="btn btn-lg btn-danger d-none" id="stopVoiceBtn">
+                                <i class="fas fa-stop"></i> Stop Voice Chat
+                            </button>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <input type="text" class="form-control" id="channelName" 
+                                   placeholder="Channel Name" value="todo-assistant">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Avatar Tab -->
+                <div class="tab-content" id="videoTab">
+                    <div class="header mb-4">
+                        <h1>Video Avatar Assistant</h1>
+                        <p class="text-muted">Interact with Luna through a video avatar - powered by HeyGen</p>
+                        
+                        <div class="alert alert-info">
+                            <strong>💡 Network Requirement:</strong> Video avatar requires unrestricted network. 
+                            Works best on home WiFi or mobile hotspot. 
+                            <br><strong>Alternative:</strong> Use Voice Chat tab for audio-only interaction.
+                        </div>
+                    </div>
+                    
+                    <div class="video-avatar-container">
+                        <!-- Avatar Browser Section -->
+                        <div class="mb-4">
+                            <h3>Browse HeyGen Avatars</h3>
+                            <button class="btn btn-primary mb-3" id="loadAvatarsBtn">
+                                <i class="fas fa-sync"></i> Load Available Avatars
+                            </button>
+                            <div id="avatarGallery" class="row">
+                                <p class="text-muted">Click "Load Available Avatars" to browse 1,287+ avatars</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Video Container -->
+                        <div id="avatarVideoContainer" class="avatar-video mb-4">
+                            <div class="placeholder text-center p-5 bg-light">
+                                <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                                <p>Start a session to see the avatar</p>
+                            </div>
+                        </div>
+                        
+                        <div id="avatarStatus" class="mb-3">
+                            <span class="badge bg-secondary">Not Active</span>
+                        </div>
+                        
+                        <div class="avatar-controls mb-3">
+                            <button class="btn btn-success" id="startAvatarBtn">
+                                <i class="fas fa-play"></i> Start Avatar Session
+                            </button>
+                            <button class="btn btn-danger d-none" id="stopAvatarBtn">
+                                <i class="fas fa-stop"></i> Stop Avatar Session
+                            </button>
+                            <button class="btn btn-info ms-2" id="showTechDetailsBtn">
+                                <i class="fas fa-code"></i> Show Technical Details
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="avatarInput" 
+                                   placeholder="Type a message for the avatar to speak...">
+                            <button class="btn btn-primary" id="avatarSendBtn">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                        
+                        <!-- Technical Details Modal -->
+                        <div id="techDetailsSection" class="mt-4 d-none">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white">
+                                    <h5>📊 HeyGen Integration - Technical Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="techDetailsContent">
+                                        <p class="text-muted">Click "Start Avatar Session" to see technical details...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay d-none" id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/agora.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/avatar.js') }}"></script>
+</body>
+</html>
+
