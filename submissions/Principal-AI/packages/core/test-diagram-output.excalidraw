@@ -1,0 +1,248 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "LLMService",
+      "type": "rectangle",
+      "x": 100,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#FFFFFF",
+      "seed": 861901743,
+      "version": 1,
+      "versionNonce": 510262069,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "LLMServiceLabel",
+      "type": "text",
+      "x": 150,
+      "y": 130,
+      "text": "LLMService",
+      "fontSize": 20,
+      "strokeColor": "#000000",
+      "seed": 969377657,
+      "version": 1,
+      "versionNonce": 743650860,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "MemoryPalace",
+      "type": "rectangle",
+      "x": 400,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#FFFFFF",
+      "seed": 1687745041,
+      "version": 1,
+      "versionNonce": 643361887,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "MemoryPalaceLabel",
+      "type": "text",
+      "x": 450,
+      "y": 130,
+      "text": "MemoryPalace",
+      "fontSize": 20,
+      "strokeColor": "#000000",
+      "seed": 1842166298,
+      "version": 1,
+      "versionNonce": 1042462313,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "Connection1",
+      "type": "arrow",
+      "x": 300,
+      "y": 150,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#000000",
+      "seed": 1394886041,
+      "version": 1,
+      "versionNonce": 1584742700,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "GroqAPI",
+      "type": "rectangle",
+      "x": 700,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#FFFFFF",
+      "seed": 1022784991,
+      "version": 1,
+      "versionNonce": 1746834776,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "GroqAPILabel",
+      "type": "text",
+      "x": 750,
+      "y": 130,
+      "text": "Groq API",
+      "fontSize": 20,
+      "strokeColor": "#000000",
+      "seed": 396643461,
+      "version": 1,
+      "versionNonce": 410514700,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "Connection2",
+      "type": "arrow",
+      "x": 600,
+      "y": 150,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#000000",
+      "seed": 1968946789,
+      "version": 1,
+      "versionNonce": 1399710878,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "ViewAwareContextBuilder",
+      "type": "ellipse",
+      "x": 100,
+      "y": 350,
+      "width": 250,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#FFFFFF",
+      "seed": 1211498290,
+      "version": 1,
+      "versionNonce": 622764250,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "ViewAwareContextBuilderLabel",
+      "type": "text",
+      "x": 150,
+      "y": 380,
+      "text": "ViewAwareContextBuilder",
+      "fontSize": 20,
+      "strokeColor": "#000000",
+      "seed": 27632062,
+      "version": 1,
+      "versionNonce": 2084116024,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "Connection3",
+      "type": "arrow",
+      "x": 200,
+      "y": 300,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -150
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#000000",
+      "seed": 461372036,
+      "version": 1,
+      "versionNonce": 1526088329,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "ResponseParser",
+      "type": "ellipse",
+      "x": 700,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#000000",
+      "backgroundColor": "#FFFFFF",
+      "seed": 423995878,
+      "version": 1,
+      "versionNonce": 414174658,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "ResponseParserLabel",
+      "type": "text",
+      "x": 750,
+      "y": 380,
+      "text": "ResponseParser",
+      "fontSize": 20,
+      "strokeColor": "#000000",
+      "seed": 176449155,
+      "version": 1,
+      "versionNonce": 1807144127,
+      "isDeleted": false,
+      "updated": 1760024710384
+    },
+    {
+      "id": "Connection4",
+      "type": "arrow",
+      "x": 800,
+      "y": 300,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -150
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#000000",
+      "seed": 654348338,
+      "version": 1,
+      "versionNonce": 314776985,
+      "isDeleted": false,
+      "updated": 1760024710384
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  }
+}
